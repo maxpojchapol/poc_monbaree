@@ -15,7 +15,6 @@ import (
 	"github.com/maxpojchapol/poc_monbaree/pkg/render"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/joho/godotenv"
 )
 
 const portNumber = ":8080"
@@ -25,10 +24,10 @@ var session *scs.SessionManager
 
 // main is the main function
 func main() {
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		log.Fatalf("Some error occured. Err: %s", err)
-	}
+	// err := godotenv.Load("../../.env")
+	// if err != nil {
+	// 	log.Fatalf("Some error occured. Err: %s", err)
+	// }
 
 	// put something in session
 	gob.Register(models.User{})
