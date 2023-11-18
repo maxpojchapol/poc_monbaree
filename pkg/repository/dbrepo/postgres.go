@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"bookings-udemy/pkg/models"
+	"github.com/maxpojchapol/poc_monbaree/pkg/models"
 )
 
 func (m *postgresDBRepo) AllUser() bool {

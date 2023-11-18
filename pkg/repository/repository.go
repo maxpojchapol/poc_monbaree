@@ -3,7 +3,7 @@ package repository
 import (
 	"time"
 
-	"bookings-udemy/pkg/models"
+	"github.com/maxpojchapol/poc_monbaree/pkg/models"
 )
 
 type DatabaseRepo interface {

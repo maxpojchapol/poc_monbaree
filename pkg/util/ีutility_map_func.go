@@ -3,7 +3,7 @@ package util
 import (
 	"strconv"
 
-	"bookings-udemy/pkg/models"
+	"github.com/maxpojchapol/poc_monbaree/pkg/models"
 )
 
 func Product_product_option_map(products []models.Product, productOption []models.ProductOption) []models.Product_Product_option_map {

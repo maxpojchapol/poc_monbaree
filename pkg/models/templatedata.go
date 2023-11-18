@@ -1,7 +1,7 @@
 package models
 
 import (
-	"bookings-udemy/pkg/forms"
+	"github.com/maxpojchapol/poc_monbaree/pkg/forms"
 )
 
 // TemplateData holds data sent from handlers to templates

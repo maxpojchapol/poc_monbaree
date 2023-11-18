@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	"bookings-udemy/pkg/models"
+	"github.com/maxpojchapol/poc_monbaree/pkg/models"
 
 	"github.com/xuri/excelize/v2"
 )
