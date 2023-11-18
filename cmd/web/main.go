@@ -8,11 +8,11 @@ import (
 	"os"
 	"time"
 
-	"bookings-udemy/driver"
-	"bookings-udemy/pkg/config"
-	"bookings-udemy/pkg/handlers"
-	"bookings-udemy/pkg/models"
-	"bookings-udemy/pkg/render"
+	"github.com/maxpojchapol/poc_monbaree/driver"
+	"github.com/maxpojchapol/poc_monbaree/pkg/config"
+	"github.com/maxpojchapol/poc_monbaree/pkg/handlers"
+	"github.com/maxpojchapol/poc_monbaree/pkg/models"
+	"github.com/maxpojchapol/poc_monbaree/pkg/render"
 
 	"github.com/alexedwards/scs/v2"
 	"github.com/joho/godotenv"

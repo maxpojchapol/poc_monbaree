@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	"bookings-udemy/pkg/config"
-	"bookings-udemy/pkg/handlers"
+	"github.com/maxpojchapol/poc_monbaree/pkg/config"
+	"github.com/maxpojchapol/poc_monbaree/pkg/handlers"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
