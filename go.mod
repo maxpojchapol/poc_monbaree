@@ -1,6 +1,6 @@
 module github.com/maxpojchapol/poc_monbaree
 
-go 1.17
+go 1.21.1
 
 require (
 	github.com/alexedwards/scs/v2 v2.4.0
