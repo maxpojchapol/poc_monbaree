@@ -1,0 +1,348 @@
+{{template "base" .}}
+
+{{define "content"}}
+
+
+<div class="row text-center"><h1>รายการสินค้า</h1></div>
+
+<div class="container mt-2">
+    
+        <form id="filterForm" action="/filter" method="get" >
+            <input  type="hidden" id="filterValue" name="filter" value="" />
+            <button type="button" class="btn btn-outline-primary" id="All" onclick="setFilterValue('All')">All</button>
+            <button type="button" class="btn btn-outline-primary" id="Vegetable"onclick="setFilterValue('Vegetable')">Vegetable</button>
+            <button type="button" class="btn btn-outline-primary" id="Fruit" onclick="setFilterValue('Fruit')">Fruit</button>
+            <button type="button" class="btn btn-outline-primary" id="Food_Product"onclick="setFilterValue('Food_Product')">Food Product</button>
+            <button type="button" class="btn btn-outline-primary" id="Non_Food_Product" onclick="setFilterValue('Non_Food_Product')">Non Food Product</button>
+        </form>
+</div>
+<br><br>
+<!-- Cart modal -->
+<div class="content" style="position: relative;">
+    <div class="container mt-2">
+        <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 g-3" id="product-list">
+            {{range $index, $productData := .ProductData}}
+            <div class="card">
+                <img src="../static/image/{{.Product.ImageUrl}}" class="card-img-top" alt="..." width="450px" height="300px">
+                <div class="card-body">
+                    <h5 class="card-title">{{.Product.ProductName}}</h5>
+                    <p class="card-text">ราคา: {{ (index .Option 0).Price }} บาท</p>
+                    <button class="btn btn-outline-secondary addToCartButton" type="button" value="{{$index}}" data-bs-toggle="modal" data-bs-target='#exampleModal-{{$index}}'>เพิ่มใส่ตะกร้า</button>
+                </div>
+            </div>
+            {{end}}
+            <!-- Repeat the above card structure for other cards -->
+        </div>
+    </div>
+<!-- Modal -->
+
+    {{range $index, $productData := .ProductData}}
+
+    <div class="modal fade" id="exampleModal-{{$index}}" tabindex="-1" aria-labelledby="#exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog"  id="#modal-{{$index}}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">เพิ่ม {{.Product.ProductName}}</span> ใส่ตะกร้า </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- <form id="selected-item-to-cart" method="post" class="need-validation"> -->
+                    
+                    <img src="../static/image/{{.Product.ImageUrl}}" class="modal-card-image-{{$index}} img-fluid" alt="">
+                    {{.Product.ProductDescription}}
+                    <div class="mb-3">
+                        <br>
+                        <input  hidden type="text" id="fruit_name" name="fruit_name" value="{{.Product.Id}}">
+                        <div class="option-selected" role="group" aria-label="Basic radio toggle button group" id="data-fruit_option-{{$index}}" >
+                            {{range $optionindex, $option := $productData.Option}}
+                                <input type="radio" class="btn-check option-radio" data-product-id="{{.Product.Id}}" 
+                                data-option_price="{{.Price}}" data-option-weight="{{.Weight}}" value="{{.Id}}" 
+                                data-fruit_option="{{.ProductOptionName}}" id="btnradio-{{$index}}-{{$optionindex}}" 
+                                autocomplete="off" name="fruit_option_{{.Product.Id}}"
+                                onclick="appearbutton('{{.Product.Id}}')">
+                                <label class="btn btn-outline-primary mx-2 option" for="btnradio-{{$index}}-{{$optionindex}}">{{.ProductOptionName}}</label>
+                            {{end}}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">จำนวน</label>
+                        <div class="input-group">
+                            <button type="button" class="btn btn-secondary" onclick="decrementQuantity('{{.Product.Id}}')">-</button>
+                            <input type="text" class="form-control" id="quantity_{{.Product.Id}}" name="quantity_{{.Product.Id}}" value="1" >
+                            <button type="button" class="btn btn-secondary" onclick="incrementQuantity('{{.Product.Id}}')">+</button>
+                        </div>
+                        <!-- <input type="number" class="form-control" id="quantity_{{.Product.Id}}" name="quantity_{{.Product.Id}}" value="1" min="1" max="10" data-product-id="{{.Product.Id}}"> -->
+                    </div>
+                    <div class="mb-3 total_price">
+                        <label for="Price" class="form-label ">ราคาทั้งหมด: <span id="totalPrice-{{.Product.Id}}"> </label>
+                    </div>
+
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                    <!-- <button type="submit" class="btn btn-primary addToCart">Buy now</button> -->
+                    <button class="btn btn-primary addToCart" id="addtocart-{{.Product.Id}}" hidden="true" data-bs-dismiss="modal" 
+                            onclick="addToCart('{{.Product.Id}}','{{.Product.ProductName}}','{{.Product.ProductDescription}}')">เพิ่มใส่ตะกร้า</button>
+                </div>
+                    <!-- </form> -->
+            </div>
+        </div>
+    </div>
+
+
+    {{end}}
+
+    <div class="shopping-cart fixed" style="position: fixed; right: 30px; top: 600px">
+        <button data-bs-toggle="modal" data-bs-target="#cartModal">
+            ตะกร้า<br>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="50" fill="currentColor" class="bi bi-bag" viewBox="0 0 16 16">
+              <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+            </svg>
+          </button>
+    </div>
+
+    <div id="cartModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">ตะกร้าของฉัน</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-5">รายการ</div>
+                        <div class="col-3">จำนวน</div>
+                        <div class="col-2">ราคา</div>
+                        <div class="col-2"></div>
+                    </div>
+                    <ul id="cart" class="list-group">
+                        <!-- Cart items will be displayed here -->
+                    </ul>
+                    <br>
+                    <!-- <p>น้ำหนักทั้งหมด:<span id="total-weight">0</span> กิโลกรัม</p> -->
+                    <p>ราคา: <span id="total">0</span> บาท</p>
+                </div>
+
+                <div class="modal-footer">
+                    <form id="checkout-form" action="/summary" method="post">
+                        <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+
+                        <input type="hidden" id="cart-data" name="cart-data" value="...">
+                        <button data-bs-dismiss="modal" type="submit">ถัดไป</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{end}}
+
+{{define "js"}}
+
+
+<script>
+
+    function decrementQuantity(productId) {
+        var quantityElement = document.getElementById("quantity_" + productId);
+        var currentQuantity = parseInt(quantityElement.value, 10);
+
+        if (currentQuantity > 1) {
+            quantityElement.value = currentQuantity - 1;
+            console.log(quantityElement.value,productId)
+            updateTotalPrice(productId);
+        }
+    }
+
+    function incrementQuantity(productId) {
+        var quantityElement = document.getElementById("quantity_" + productId);
+        var currentQuantity = parseInt(quantityElement.value, 10);
+        var maxQuantity = 100; // Set your maximum quantity here
+        if (currentQuantity < maxQuantity) {
+            quantityElement.value = currentQuantity + 1;
+            console.log(quantityElement.value,productId)
+            updateTotalPrice(productId);
+        }
+    }
+
+
+
+    document.querySelectorAll('.addToCartButton').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var card = this.closest('.card');
+            var cardTitle = card.querySelector('.card-title').textContent;
+            document.getElementById('fruit_name').value = cardTitle;
+        });
+    });
+
+    // for change option
+    document.querySelectorAll('.option-radio').forEach(function(radioButton) {
+    radioButton.addEventListener('change', function() {
+        // This function will be triggered when a radio button is selected.
+        var productId = this.getAttribute("data-product-id")
+
+        const selectedValue = this.getAttribute('data-option_price');
+        var quantity = document.getElementById("quantity_" + productId).value;
+        const totalPrice = selectedValue * quantity;
+        if (totalPrice!=null){
+            document.getElementById('totalPrice-'+productId).textContent = totalPrice;
+        }
+        console.log(quantity)
+        });
+    });
+
+
+    function updateTotalPrice(productId) {
+        var quantity = parseFloat(document.getElementById("quantity_" + productId).value);
+        var x = document.querySelector('input[name=fruit_option_' + productId + ']:checked');
+
+        if (x) {
+            var selectedOption = parseFloat(x.getAttribute('data-option_price'));
+            var totalPrice = quantity * selectedOption;
+            document.getElementById('totalPrice-' + productId).textContent = totalPrice;
+        }
+    }
+</script>
+
+<script>
+
+
+    // this script for cart function
+        let total = 0;
+        let total_weight = 0;
+        let cartData = localStorage.getItem('myCart');
+        let cart = cartData ? JSON.parse(cartData) : [];
+        console.log("my cart data is " + cart)
+        function addToCart(productId, productName,productDescription) {
+            // Update your cart or perform other actions
+            var optionPrice = document.querySelectorAll('input[name="fruit_option_' + productId + '"]:checked')[0].getAttribute('data-option_price');
+            var optionWeight = document.querySelectorAll('input[name="fruit_option_' + productId + '"]:checked')[0].getAttribute('data-option-weight');
+            var optionName = document.querySelectorAll('input[name="fruit_option_' + productId + '"]:checked')[0].getAttribute('data-fruit_option');
+            var optionId = document.querySelectorAll('input[name="fruit_option_' + productId + '"]:checked')[0].value
+            console.log(optionId,optionWeight)
+            quantity = document.getElementById('quantity_'+productId).value
+            productName_productOption = productName+"("+optionName+")"
+
+            price = optionPrice*quantity
+            weight = optionWeight*quantity
+
+            total_weight +=weight
+            total += price;
+            cart.push({ id:productId,optionId:optionId, name: productName_productOption,product_description:productDescription, quantity:parseInt(quantity), total_price: price, weight:weight,total:total,total_weight:total_weight })
+            console.log(cart)
+            updateCart()
+            
+            // Rest of your code
+        }
+
+        function appearbutton(productId){
+            var addcartbutton = document.getElementById('addtocart-' + productId);
+            if (addcartbutton) {
+                // Show the element by removing the 'hidden' attribute
+                addcartbutton.removeAttribute('hidden');
+            }
+        }
+
+        function updateCart() {
+            const cartList = document.getElementById('cart');
+            cartList.innerHTML = ''; // Clear previous items
+            let total = 0;
+            let total_weight = 0;
+            cart.forEach((item, index) => {
+
+            total_weight +=item.weight
+            total += item.total_price;
+
+            //update back to item
+            item.total = total
+            item.total_weight = total_weight
+            // Create a row (Bootstrap row) for each item
+            const row = document.createElement('div');
+            row.classList.add('row');
+
+            // Create a column for the item name
+            const itemColumn = document.createElement('div');
+            itemColumn.classList.add('col-5');
+            itemColumn.textContent = item.name;
+            row.appendChild(itemColumn);
+
+            // Create a column for the item quantity
+            const quantityColumn = document.createElement('div');
+            quantityColumn.classList.add('col-3');
+            quantityColumn.textContent = item.quantity;
+            row.appendChild(quantityColumn);
+
+            // Create a column for the item price
+            const priceColumn = document.createElement('div');
+            priceColumn.classList.add('col-2');
+            priceColumn.textContent = `${item.total_price} -`;
+            row.appendChild(priceColumn);
+
+            // Create a column for the remove button
+            const removeColumn = document.createElement('div');
+            removeColumn.classList.add('col-2');
+            const removeBtn = document.createElement('button');
+            removeBtn.innerHTML = '&times;';
+            removeBtn.classList.add = 'close';
+            removeBtn.onclick = () => removeItem(index);
+            removeColumn.appendChild(removeBtn);
+            row.appendChild(removeColumn);
+
+            // Add the row to the cart list
+            cartList.appendChild(row);
+            });
+            
+            // document.getElementById('total-weight').textContent = total_weight/1000;
+            document.getElementById('total').textContent = total;
+            document.getElementById('cart-data').value = JSON.stringify(cart);
+            localStorage.setItem('myCart', JSON.stringify(cart));
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+
+    // for change header text
+    function changeText() {
+        const dynamicText = document.getElementById("dynamicText");
+        dynamicText.textContent = "คุณ {{.User.FirstName}} (credit:{{.User.AmountRemain}} THB)" ;// Change the text
+    }
+
+    // Call the function when the page is fully loaded
+    window.addEventListener("load", changeText());
+    window.addEventListener("load", updateCart());
+
+</script>
+
+<script>
+
+        function checkAndChangeButtonColor() {
+                    // Example condition: Change color if the filter type is 'Fruit'
+                    // Replace this with your actual condition
+                    console.log('{{.Data.Filter}}')
+                    button =  document.getElementById('{{.Data.Filter}}')
+                    if (button) {
+                        button.classList.add( 'btn-primary'); 
+                        button.classList.remove('btn-outline-primary');
+                    }
+        }
+        function setFilterValue(value) {
+            document.getElementById('filterValue').value = value;
+            document.getElementById('filterForm').submit();
+        }
+    
+        document.addEventListener('DOMContentLoaded', function() {
+        checkAndChangeButtonColor();
+        });
+
+</script>
+
+{{end}}
+

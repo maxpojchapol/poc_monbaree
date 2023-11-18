@@ -1,0 +1,10 @@
+create_table("users") {
+  t.Column("lineuserid", "string", {primary:true})
+  t.Column("first_name", "string", {})
+  t.Column("last_name", "string", {})
+  t.Column("address", "string", {})
+  t.Column("phone", "string", {})
+  t.Column("admin", "bool", {"default": false})
+  t.Column("amount_remain", "integer",{})
+  t.Column("joined_at", "timestamp", {})
+}

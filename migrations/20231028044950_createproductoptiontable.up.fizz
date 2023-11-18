@@ -1,0 +1,6 @@
+create_table("product_option") {
+  t.Column("id", "integer", {primary:true})
+  t.Column("product_id", "integer", {})
+  t.Column("product_option", "string", {})
+  t.Column("price", "integer", {})
+}

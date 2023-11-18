@@ -1,0 +1,71 @@
+{{template "base" .}}
+
+{{define "content"}}
+
+<head>
+    <title>Add Product</title>
+</head>
+<div class="container">
+    <h2>Add Product</h2>
+    <form action="/add_product" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+        <label for="productName">Product Name:</label>
+        <input type="text" id="productName" name="productName" required><br><br>
+
+        <label for="productDescription">Product Description:</label><br>
+        <textarea id="productDescription" name="productDescription" rows="4" cols="50" required></textarea><br><br>
+
+        <label for="productType">Product Type:</label>
+        <select id="productType" name="productType">
+            <option value="Fruit">Fruit</option>
+            <option value="Vegetable">Vegetable</option>
+            <option value="Food_Product">Food Product</option>
+            <option value="Non_Food_Product">Non Food Product</option>
+        </select><br><br>
+
+        <label for="productImage">Product Image:</label>
+        <input type="file" id="productImage" name="productImage" accept="image/*" required><br><br>
+
+        <h3>Product Options:</h3>
+        <div id="productOptions">
+            <div class="productOption">
+                <label for="optionName">Option Name:</label>
+                <input type="text" name="optionName[]" required>
+                <label for="optionPrice">Option Price:</label>
+                <input type="number" name="optionPrice[]" required>
+                <label for="optionWeight">Option Weight:</label>
+                <input type="number" name="optionWeight[]" required>
+            </div>
+        </div>
+        <button type="button" id="addOptionButton">Add Option</button><br><br>
+        <label for="vat">Include VAT:</label>
+        <input type="checkbox" id="vat" name="vat" value="yes">
+        <input type="submit" value="Add Product">
+    </form>
+
+    
+</div>
+
+{{end}}
+
+{{define "js"}}
+
+<script>
+    // JavaScript to add dynamic option fields
+    document.getElementById('addOptionButton').addEventListener('click', function() {
+        const productOptions = document.getElementById('productOptions');
+        const newOption = document.createElement('div');
+        newOption.className = 'productOption';
+        newOption.innerHTML = `
+            <label for="optionName">Option Name:</label>
+            <input type="text" name="optionName[]" required>
+            <label for="optionPrice">Option Price:</label>
+            <input type="number" name="optionPrice[]" required>
+            <label for="optionWeight">Option Weight:</label>
+            <input type="number" name="optionWeight[]" required>
+        `;
+        productOptions.appendChild(newOption);
+    });
+</script>
+
+{{end}}

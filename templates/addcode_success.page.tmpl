@@ -1,0 +1,126 @@
+{{template "base" .}}
+
+{{define "content"}}
+
+<div class="container">
+    <h1 class="text-center">แลก Code สำเร็จ!</h1>
+
+    
+    {{if .Data.Iscredit}}
+    <div class="row">
+        <h2>ข้อมูลการแลก Code</h2>
+    </div>
+    <div class="row">
+            <h2>จำนวนเครดิตของ Code: {{.Data.Credit_Redeem}}</h2>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h2>ยอดเครดิตปัจจุบันของคุณคือ :{{.User.AmountRemain}} </h2>
+        </div>
+    </div>
+    {{end}}
+
+    <div class="row">
+        <div class="col text-center">
+            {{if not .Data.Ispinto}}
+            <a href="/product" type="button" class="btn btn-success">ไปไหนสินค้า</a>
+            {{else}}
+            <div class="set-gift">
+                <h2>ยินดีด้วย คุณได้รับปิ่นโตเป็นระยะเวลา {{.Data.Pinto_Redeem}} เดือน </h2>
+                <h2>กรุณากรอกวันที่ต้องการรับปิ่นโตในแต่ละเดือน</h2>
+                <div class="set-date">
+                    {{range $monthNumber, $month := .IntMap}}
+                    <div class="row">
+                        <p> <strong>เดือน {{$month}}:</strong> ฉันต้องการรับปิ่นโตในวันที่
+                            <select id="select-day-start-{{$monthNumber}}" style="width: 50px;" onchange="checkSelectionDateStart('{{$monthNumber}}')"></select>
+                            และ
+                            <select id="select-day-end-{{$monthNumber}}" style="width: 50px;" onchange="checkSelectionDateEnd('{{$monthNumber}}')"></select>
+                            ของเดือน
+                        </p>
+                    </div>
+                    {{end}}
+                    <div class="row">
+                        <p>ปิ่นโตของคุณ จะถูกส่งให้คุณ 2 ครั้งต่อเดือน ตามวันที่คุณเลือก</p>
+                    </div>
+                </div>
+
+            </div>
+            <form method="post" action="/set_gift_date">
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                <input type="hidden" id="date-data" name="date-data" value="...">
+                <button id="product-nav" type="submit" hidden="true" class="btn btn-success">สำเร็จ</a>
+            </form>
+            {{end}}
+        </div>
+    </div>
+    
+</div>
+
+{{end}}
+
+<script>
+    const data = [];
+
+    function populateSelects(monthKey, monthValue) {
+        let maxDays = 31;
+        const intMonthKey = parseInt(monthKey, 10);
+
+        if (intMonthKey === 2) { // February
+            maxDays = 28;
+        } else if ([4, 6, 9, 11].includes(intMonthKey)) { // Months with 30 days
+            maxDays = 30;
+        }
+        for (let i = 1; i <= maxDays; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            option.textContent = i;
+            if (i === 1) {
+                option.selected = true;
+                updateData(monthKey, 'daystart', i)
+                updateData(monthKey, 'dayend', i)
+            }
+            const selectStart = document.getElementById(`select-day-start-${monthKey}`);
+            const selectEnd = document.getElementById(`select-day-end-${monthKey}`);
+            selectStart.appendChild(option.cloneNode(true));
+            selectEnd.appendChild(option);
+        }
+    }
+
+    function checkSelectionDateStart(monthKey) {
+        const day = document.getElementById(`select-day-start-${monthKey}`).value;
+        console.log(`Start day for month ${monthKey}: ${day}`);
+        updateData(monthKey, 'daystart', day);
+    }
+
+    function checkSelectionDateEnd(monthKey) {
+        const day = document.getElementById(`select-day-end-${monthKey}`).value;
+        console.log(`End day for month ${monthKey}: ${day}`);
+        updateData(monthKey, 'dayend', day);
+    }
+
+    function updateData(monthKey, key, value) {
+        if (!data[monthKey]) {
+            data[monthKey] = {};
+        }
+        data[monthKey][key] = value;
+
+        const buttonElement = document.getElementById("product-nav");
+        document.getElementById("date-data").value = JSON.stringify(data);
+        buttonElement.removeAttribute("hidden");
+    }
+
+    // Iterate through the keys of the IntMap
+    document.addEventListener("DOMContentLoaded", function () {
+        const monthsJSON = '{{ .Data.IntMapJSON }}';
+        const months = JSON.parse(monthsJSON);
+
+        for (const monthKey in months) {
+            
+            if (months.hasOwnProperty(monthKey)) {
+                const monthValue = months[monthKey];
+                
+                populateSelects(monthKey, monthValue);
+            }
+        }
+    });
+</script>

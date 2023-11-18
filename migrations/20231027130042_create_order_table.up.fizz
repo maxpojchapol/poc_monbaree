@@ -1,0 +1,10 @@
+create_table("order") {
+  t.Column("order_id", "string", {primary:true})
+  t.Column("status", "string", {})
+  t.Column("full_price", "integer", {})
+  t.Column("discount_price", "integer", {})
+  t.Column("discount", "integer", {})
+  t.Column("user_order", "string", {})
+  t.Column("user_accept", "string", {})
+  t.Column("address", "string", {})
+}

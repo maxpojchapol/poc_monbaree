@@ -1,0 +1,40 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1 class="mt-3">เพิ่ม Code</h1>
+            {{$res := index .Data "user"}}
+                <form action="/postcode" method="post">
+                    
+                    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+
+                    <div class="form-group mb-3">
+                        <label for="firstname">กรุณาใส่ Code ที่ท่านได้รับ</label>
+                        {{with .Data.error}}
+                            <label class="text-danger">โค้ดไม่ถูกต้อง</label>
+                        {{end}}
+                        <input type="text" class="form-control" 
+                               id="promocode" name="promocode" placeholder="กรุณาใส่ Code ที่ท่านได้รับ">
+                    </div>
+                    <button type="submit" class="btn btn-primary">ยืนยัน</button>
+                </form>
+        </div>
+    </div>
+</div>
+{{end}}
+
+
+{{define "js"}}
+<script>
+function changeText() {
+    const dynamicText = document.getElementById("dynamicText");
+    dynamicText.textContent = "คุณ {{.User.FirstName}} (credit:{{.User.AmountRemain}} THB)" ;// Change the text
+}
+
+// Call the function when the page is fully loaded
+window.addEventListener("load", changeText());
+
+</script>
+{{end}}
