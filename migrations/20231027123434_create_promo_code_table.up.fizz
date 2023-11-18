@@ -1,0 +1,7 @@
+create_table("promo_code") {
+  t.Column("code", "string", {primary:true})
+  t.Column("user_created", "string", {})
+  t.Column("user_use", "string", {})
+  t.Column("create_date", "timestamp", {})
+  t.Column("amount", "integer", {})
+}

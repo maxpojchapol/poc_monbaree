@@ -1,0 +1,128 @@
+{{template "base" .}}
+
+{{define "content"}}
+
+
+<form id="filterForm" action="/filter_admin" method="get" >
+    <input  type="hidden" id="filterValue" name="filter" value="" />
+    <button type="button" class="btn btn-outline-primary" id="All" onclick="setFilterValue('All')">All</button>
+    <button type="button" class="btn btn-outline-primary" id="Vegetable"onclick="setFilterValue('Vegetable')">Vegetable</button>
+    <button type="button" class="btn btn-outline-primary" id="Fruit" onclick="setFilterValue('Fruit')">Fruit</button>
+    <button type="button" class="btn btn-outline-primary" id="Food_Product"onclick="setFilterValue('Food_Product')">Food Product</button>
+    <button type="button" class="btn btn-outline-primary" id="Non_Food_Product" onclick="setFilterValue('Non_Food_Product')">Non Food Product</button>
+</form>
+
+<div class="container">
+    <div class="row">
+        <table class="table table-bordered" table-striped>
+            <tr>
+                <th>ID</th>
+                <th>Product Image</th>
+                <th>Product Type</th>
+                <th>Product Name</th>
+                <th>Product option - Product Price</th>
+                <th>Active</th>
+            </tr>
+
+            <!-- Example Row (repeat this block for each product) -->
+                {{range $index, $productData := .ProductData}}
+                    <tr>
+                        <td>{{.Product.Id}}</td>
+                        <td><img src="../static/image/{{.Product.ImageUrl}}" width="100px" height="100px"></td>
+                        <td>{{.Product.ProductType}}</td>
+                        <td>
+                            {{.Product.ProductName}}
+                            <Br>
+                            {{.Product.ProductDescription}}
+                        </td>
+                        <td>
+                            {{range $optionindex, $option := $productData.Option}}
+                                <div class="row" >
+                                <!-- <div class="row" style="border-bottom: 1px solid rgb(179, 158, 158); padding-top: 2px;"> -->
+                                    <div class="col">
+                                        {{.ProductOptionName}}
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col">{{.Price}} บาท</div>
+                                            <div class="col"><input type="checkbox" class="toggle-button" onchange="ActiveChangeOption(this.checked,'{{.Id}}')" {{if .Active}}checked{{end}}></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <input id="option-{{.Id}}" type="text" value="{{.Price}}" onchange="PriceChange(value,'{{.Id}}')">
+                                            </div>
+                                        </div>
+                                    </div>    
+                                </div>
+                            {{end}}
+                        </td>
+                        <td class="text-center">
+                            <input type="checkbox" class="toggle-button" onchange="ActiveChangeProduct(this.checked,'{{.Product.Id}}')" {{if .Product.Active}}checked{{end}}>
+                        </td>
+                    </tr>
+                 {{end}}
+
+            <!-- Add more rows here -->
+        </table>
+
+        <div class="col" id="submit-form" style="display: none;">
+            <form method="post" action="/manage_product">
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                <input type="hidden" id="form-data" name="form-data" value="...">
+                <!-- Add a button with an id and style it as "display:none" initially -->
+                <button class="btn btn-primary" id="submitButton" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{end}}
+
+
+
+{{define "js"}}
+
+<script>
+    let datachange=[]
+    function PriceChange(price,id){
+        console.log(price,id)
+        displaySubmit()
+        datachange.push({id :id,change_db:"product_option", change_type:"change", change_field:"price", change_data:price})
+        updateValue()
+    }
+    function ActiveChangeProduct(active,id){
+        console.log(active,id)
+        displaySubmit()
+        datachange.push({ id :id,change_db:"product",change_type:"change", change_field:"active", change_data:active.toString()})
+        updateValue()
+    }
+    function ActiveChangeOption(active,id){
+        console.log(active,id)
+        displaySubmit()
+        datachange.push({ id :id,change_db:"product_option",change_type:"change", change_field:"active", change_data:active.toString()})
+        updateValue()
+    }
+
+    // function ProductDescriptionChange(data,id){
+    //     console.log(data,id)
+    //     displaySubmit()
+    //     datachange.push({ id :id,change_db:"product",change_type:"change", change_field:"product_description", change_data:data})
+    //     updateValue()
+    // }
+
+    function displaySubmit(){
+        var submitButton = document.getElementById("submit-form");
+        submitButton.style.display = "block"; // Show the button
+    }
+
+    function updateValue(){
+        document.getElementById('form-data').value = JSON.stringify(datachange);
+    }
+
+    function setFilterValue(value) {
+            document.getElementById('filterValue').value = value;
+            document.getElementById('filterForm').submit();
+        }
+</script>
+
+{{end}}

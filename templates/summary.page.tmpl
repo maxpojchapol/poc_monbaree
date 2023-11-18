@@ -1,0 +1,232 @@
+{{template "base" .}}
+
+{{define "content"}}
+    <div class="container">
+        <div class="row" style="background-color: rgb(145, 241, 241);">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm" style="text-align: center;">
+                <h1>ออเดอร์ของฉัน</h1>
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+        <div class="row" style="background-color: rgb(145, 241, 241);">
+            <form method="post" action="/postorder" id="info-data" name="info-data">
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                    <div class="order-summary">
+                        <div class="order-details">
+                            <div>
+                                <span style="font-weight: bolder;">วันที่ต้องการจัดส่ง:</span> 
+                                <select id="order-date" name="order-date" onchange="displaycalendar()">
+                                    <option value="ส่งทันที">ส่งทันที</option>
+                                    <option value="กำหนดวันส่งเอง">กำหนดวันส่งเอง</option>
+                                </select>
+                                <div id="calendar" class="selected-date" style="display: none;">
+                                    <input name="order_date" type="date" value="">
+                                </div>
+                            </div>
+                            
+                                <div>
+                                    <span style="font-weight: bolder;">ออเดอร์คุณ:</span> 
+                                    <input name="order_name" type="text" value="{{.User.FirstName}}" required>
+                                    <br>
+
+
+                                    <span style="font-weight: bolder;">จัดส่งที่:</span> <br>
+                                    <div class="row">
+                                        <div class="col">
+                                            บ้านเลขที่
+                                            <input type="text" class="form-control"
+                                            id="house_no" name="house_no" placeholder="บ้านเลขที่" value="{{.User.HouseNo}}" required>
+                                        </div>
+                                        <div class="col">
+                                            ซอย
+                                            <input type="text" class="form-control"
+                                            id="soi" name="soi" placeholder="ซอย" value="{{.User.Soi}}" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            ถนน
+                                            <input type="text" class="form-control"
+                                            id="road" name="road" placeholder="ถนน" value="{{.User.Road}}" required>
+                                        </div>
+                                        <div class="col">
+                                            แขวง/ตำบล
+                                            <input type="text" class="form-control"
+                                            id="sub_district" name="sub_district" placeholder="แขวง/ตำบล" value="{{.User.SubDistrict}}" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            เขต
+                                            <input type="text" class="form-control"
+                                            id="county" name="county" placeholder="เขต" value="{{.User.County}}" required>
+                                        </div>
+                                        <div class="col">
+                                            จังหวัด
+                                            <input type="text" class="form-control"
+                                            id="country" name="country" placeholder="จังหวัด" value="{{.User.Country}}" required>
+                                        </div>
+            
+                                    </div>
+            
+                                </div>
+                                
+                                <div class="form-group mb-3">
+                                    <div class="row">
+                                        <div class="col">
+                                            รหัสไปรษณีย์
+                                            <input type="text" class="form-control"
+                                            id="post_code" name="post_code" placeholder="รหัสไปรษณีย์"value="{{.User.PostCode}}" required>
+                                        </div>
+                                        <div class="col">
+                                            <label for="phone">เบอร์โทรศัพท์</label>
+                                            <input type="text" class="form-control"
+                                             id="order_phone" name="order_phone" placeholder="เบอร์โทรศัพท์"value="{{.User.Phone}}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 ">
+                                        <span style="font-weight: bolder;">รายการสินค้า</span> 
+                                    </div>
+                                    <div class="col-2 text-center">
+                                        <span style="font-weight: bolder;">จำนวน</span> 
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <span style="font-weight: bolder;">ราคา</span> 
+                                    </div>
+                                </div>
+
+                                {{range $index, $cart := .CartItems}}
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span style="font-weight: bolder;">-{{.Name}}</span> 
+                                    </div>
+                                    <div class="col-2 text-center">
+                                        <span style="font-weight: bolder;">{{.Quantity}}</span> 
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <span style="font-weight: bolder;">{{.TotalPrice}} บาท</span> 
+                                    </div>
+                                </div>
+                                
+                                {{end}}
+                                <br><br>
+                                <div>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <span style="font-weight: bolder;">ราคาสินค้าทั้งหมด:</span> 
+                                        </div>
+                                        <div class="col-4 text-center">
+                                            <span style="font-weight: bolder;">{{.Data.procuct_total_price}} บาท</span> 
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <span style="font-weight: bolder;">ราคาค่าจัดส่ง:</span> 
+                                            
+                                            {{range $index, $description := .ShippingData.Description}}
+                                                <ul>{{$description}}</ul>
+                                            {{end}}
+                                        </div>
+                                        <div class="col-4 text-center">
+                                            <span style="font-weight: bolder;"> {{.ShippingData.Total_cost}} บาท</span> 
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="order-total">
+                            <div class="row">
+                                <div class="col-8">
+                                    <h3>จำนวนเงินทั้งหมด: </h3> 
+                                </div>
+                                <div class="col-4 text-center">
+                                    <h3> {{.Data.total_price}} บาท</h3>
+                                </div>
+                            </div>
+                        </div>
+                        {{if .MessageAmount.pay_with_credit}}
+                            <div class="order-total">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <h3>ยอดเงินปัจจุบันในเครดิต: </h3> 
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <h3> {{.MessageAmount.current_money_remain}} บาท</h3>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <h3>ยอดเงินคงเหลือในเครดิต: </h3> 
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <h3> {{.MessageAmount.next_money_remain}} บาท</h3>
+                                    </div>
+                                </div>
+                                {{if .MessageAmount.message_addmoney}}
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <h3>ชำระเพิ่ม: </h3> 
+                                        </div>
+                                        <div class="col-4 text-center">
+                                            <h3> {{.MessageAmount.amount_addmoney}} บาท</h3>
+                                        </div>
+                                    </div>
+                                {{end}}
+                            </div>
+                        {{end}}
+                    </div>
+                </div>
+                <div class="col-sm">
+                </div>
+
+
+                <!-- for submit button -->
+                <div class="row">
+                    <div class="col-3"></div>
+                    <div class="col-6">
+                        <div class="row">
+                            <button id="submit" type="submit" class="btn btn-primary btn-lg btn-block m-0">{{.MessageAmount.button_message}}</button>
+                        </div>
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+                <br>
+            </form>
+
+        </div>
+
+        </div>
+    </div>
+    
+{{end}}
+
+
+{{define "js"}}
+    <script>
+        function displaycalendar() {
+            var calendar = document.getElementById("calendar");
+            var orderDate = document.getElementById("order-date").value;
+
+            if (orderDate === "กำหนดวันส่งเอง") {
+                calendar.style.display = "block";
+            } else {
+                calendar.style.display = "none";
+            }
+        }
+        document.getElementById('submit').addEventListener('click', function(event) {
+            localStorage.removeItem('myCart')
+        });
+    </script>
+{{end}}

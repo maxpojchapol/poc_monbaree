@@ -1,0 +1,159 @@
+{{template "base" .}}
+
+{{define "content"}}
+
+    <div class="container">
+        <div class="row">
+            <h2>Filter</h2>
+        </div>
+            <p>
+                <form method="get" action="/filter_order" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                    Filter from date:
+                    <input type="date" name="from_date" value="{{.Data.fromDate}}">
+                    to date:
+                    <input type="date" name="to_date" value="{{.Data.toDate}}">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </form>
+                <form method="get" action="/filter_order" style="display: inline;">
+                    <input type="text" hidden name="export_file" value="true">
+                    <input type="date" hidden name="from_date" value="{{.Data.fromDate}}">
+                    <input type="date" hidden name="to_date" value="{{.Data.toDate}}">
+                    <button class="btn btn-primary" type="submit">ExportFile</button>
+                </form>
+            </p>
+            {{if .Data.haveFile}}
+                <a href="/download">Download File</a>
+            {{end}}
+        <br>
+        <div class="row">
+
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">OrderId</th>
+                    <th scope="col">OrderDate</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">OrderDetail</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">UnitPrice</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">ShippingId</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                    {{range $index, $productData := .OrderData}}
+                        <tr>
+                            <td>
+                               
+                                {{.Order.OrderId}}
+                            </td>
+                            <td>
+                                <input id="datechange-{{.Order.OrderId}}" type="text" value="{{.Order.DateString}}" onchange="DateChange('{{.Order.OrderId}}','{{.Order.UserOrder.Lineuserid}}')">
+                            </td>
+                            <td>{{.Order.UserOrder.FirstName}}</td>
+                            <td>
+                                {{range .OrderDetail}}
+                                    <div class="row">
+                                            -{{.ProductName}}
+                                    </div>
+                                {{end}}
+                            </td>
+                            <td>
+                                {{range .OrderDetail}}
+                                    <div class="row">
+                                            -{{.ProductDescription}}
+                                    </div>
+                                {{end}}
+                            </td>
+                            <td>
+                                {{range .OrderDetail}}
+                                    <div class="row">
+                                        {{.OptionPrice}} บาท
+                                    </div>
+                                {{end}}
+                            </td>
+                            <td style="text-align: center;">
+                                {{range .OrderDetail}}
+                                    <div>{{.Quantity}}</div>
+                                {{end}}
+                            </td>
+                            <td>{{.Order.TotalPrice}} บาท</td>
+                            <td>
+                                {{if not .Order.ShippingId}}
+                                <select id="status{{.Order.OrderId}}" name="status" onchange="statusChange('{{.Order.OrderId}}','{{.Order.UserOrder.Lineuserid}}')">
+                                    <option value="pending" {{if eq .Order.Status "pending"}}selected{{end}}>pending</option>
+                                    <option value="paid" {{if eq .Order.Status "paid"}}selected{{end}}>paid</option>
+                                    <option value="shipped" {{if eq .Order.Status "shipped"}}selected{{end}}>shipped</option>
+                                </select>
+                                {{else}}
+                                    shipped
+                                {{end}}
+                                
+                            </td>
+                            <td>
+                                {{if not .Order.ShippingId}}
+                                    <input id="shipping-{{.Order.OrderId}}" type="text" value="{{.Order.ShippingId}}" onchange="ShippingChange('{{.Order.OrderId}}','{{.Order.UserOrder.Lineuserid}}')">
+                                {{else}}
+                                    {{.Order.ShippingId}}
+                                {{end}}
+                            </td>
+                        </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <div class="col" id="submit-form" style="display: none;">
+                <form method="post" action="/update_order_data">
+                    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                    <input type="hidden" id="form-data" name="form-data" value="...">
+                    <!-- Add a button with an id and style it as "display:none" initially -->
+                    <button class="btn btn-primary" id="submitButton" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+
+        
+    </div>
+
+{{end}}
+
+<script>
+    let changelist = []; // Array to store cart items
+
+    function statusChange(orderId,IdUserOrder) {
+
+        var submitButton = document.getElementById("submit-form");
+        submitButton.style.display = "block"; // Show the button
+        var status = document.getElementById("status"+orderId).value;
+        changelist.push({orderId:orderId,submittedType:"status",status:status,IdUserOrder:IdUserOrder})
+        document.getElementById('form-data').value = JSON.stringify(changelist);
+        console.log(changelist)
+    }
+
+    function ShippingChange(orderId,IdUserOrder) {
+        var submitButton = document.getElementById("submit-form");
+        submitButton.style.display = "block"; // Show the button
+        var shippingId = document.getElementById("shipping-"+orderId).value;
+        changelist.push({orderId:orderId,submittedType:"shipping",shippingId:shippingId,IdUserOrder:IdUserOrder})
+        document.getElementById('form-data').value = JSON.stringify(changelist);
+        console.log(changelist)
+    }
+    function DateChange(orderId,IdUserOrder) {
+        var submitButton = document.getElementById("submit-form");
+        submitButton.style.display = "block"; // Show the button
+        var datestring = document.getElementById("datechange-"+orderId).value;
+        changelist.push({orderId:orderId,submittedType:"datechange",datestring:datestring,IdUserOrder:IdUserOrder})
+        document.getElementById('form-data').value = JSON.stringify(changelist);
+        console.log(changelist)
+    }
+    
+    
+</script>
+
