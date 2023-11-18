@@ -3,8 +3,8 @@ package dbrepo
 import (
 	"database/sql"
 
-	"bookings-udemy/pkg/config"
-	"bookings-udemy/pkg/repository"
+	"github.com/maxpojchapol/poc_monbaree/pkg/config"
+	"github.com/maxpojchapol/poc_monbaree/pkg/repository"
 )
 
 type postgresDBRepo struct {

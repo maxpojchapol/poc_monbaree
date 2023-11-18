@@ -9,9 +9,9 @@ import (
 	"strconv"
 	"time"
 
-	"bookings-udemy/pkg/models"
-	"bookings-udemy/pkg/render"
-	"bookings-udemy/pkg/util"
+	"github.com/maxpojchapol/poc_monbaree/pkg/models"
+	"github.com/maxpojchapol/poc_monbaree/pkg/render"
+	"github.com/maxpojchapol/poc_monbaree/pkg/util"
 )
 
 func (m *Repository) GetOrderTable(w http.ResponseWriter, r *http.Request) {

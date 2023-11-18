@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"bookings-udemy/pkg/config"
-	"bookings-udemy/pkg/models"
+	"github.com/maxpojchapol/poc_monbaree/pkg/config"
+	"github.com/maxpojchapol/poc_monbaree/pkg/models"
 
 	"github.com/justinas/nosurf"
 )

@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"bookings-udemy/pkg/models"
+	"github.com/maxpojchapol/poc_monbaree/pkg/models"
 )
 
 const LINEAPI = "https://api.line.me/v2/bot/message/push"

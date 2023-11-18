@@ -1,14 +1,6 @@
 package handlers
 
 import (
-	"bookings-udemy/driver"
-	"bookings-udemy/pkg/config"
-	"bookings-udemy/pkg/forms"
-	"bookings-udemy/pkg/models"
-	"bookings-udemy/pkg/render"
-	"bookings-udemy/pkg/repository"
-	"bookings-udemy/pkg/repository/dbrepo"
-	"bookings-udemy/pkg/util"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -16,6 +8,15 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/maxpojchapol/poc_monbaree/pkg/config"
+	"github.com/maxpojchapol/poc_monbaree/driver"
+	"github.com/maxpojchapol/poc_monbaree/pkg/forms"
+	"github.com/maxpojchapol/poc_monbaree/pkg/models"
+	"github.com/maxpojchapol/poc_monbaree/pkg/render"
+	"github.com/maxpojchapol/poc_monbaree/pkg/repository"
+	"github.com/maxpojchapol/poc_monbaree/pkg/repository/dbrepo"
+	"github.com/maxpojchapol/poc_monbaree/pkg/util"
 )
 
 // Repo the repository used by the handlers
