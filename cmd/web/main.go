@@ -25,7 +25,7 @@ var session *scs.SessionManager
 
 // main is the main function
 func main() {
-	err := godotenv.Load("../../.env")
+	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Some error occured. Err: %s", err)
 	}
