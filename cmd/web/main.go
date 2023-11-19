@@ -8,7 +8,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/joho/godotenv"
 	"github.com/maxpojchapol/poc_monbaree/driver"
 	"github.com/maxpojchapol/poc_monbaree/pkg/config"
 	"github.com/maxpojchapol/poc_monbaree/pkg/handlers"
@@ -25,10 +24,10 @@ var session *scs.SessionManager
 
 // main is the main function
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Some error occured. Err: %s", err)
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatalf("Some error occured. Err: %s", err)
+	// }
 
 	// put something in session
 	gob.Register(models.User{})
