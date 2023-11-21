@@ -1,0 +1,2 @@
+INSERT INTO public.users ("lineuserid","first_name","last_name","address","phone","admin","amount_remain","joined_at","house_no","county","post_code","sub_district","country","soi","road","created_at","updated_at") VALUES
+	 ('U5e9dbb896a6685b53a8e03997fa18802','พชพล','ธาราไพศาลสุข','56พระราม 2 ซอย3 แยก3พระราม2Krung Thep Mahanakhon (Bangkok)บางมดThailand10150','0908133372',true,0,'2023-11-21 12:28:45.405996','56','Krung Thep Mahanakhon (Bangkok)','10150','บางมด','Thailand','พระราม 2 ซอย3 แยก3','พระราม2','2023-11-21 12:28:45.405996','2023-11-21 12:28:45.405996');
