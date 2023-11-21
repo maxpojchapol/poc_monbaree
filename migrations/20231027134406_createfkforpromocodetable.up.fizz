@@ -1,4 +1,0 @@
-add_foreign_key("promo_code","user_created",{"users":["lineuserid"]},{
-    "on_delete":"cascade",
-    "on_update":"cascade",
-})

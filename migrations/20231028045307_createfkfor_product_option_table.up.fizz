@@ -1,4 +1,0 @@
-add_foreign_key("product_option","product_id",{"product":["id"]},{
-    "on_delete":"cascade",
-    "on_update":"cascade",
-})

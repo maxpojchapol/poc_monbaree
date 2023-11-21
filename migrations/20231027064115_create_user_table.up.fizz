@@ -7,4 +7,13 @@ create_table("users") {
   t.Column("admin", "bool", {"default": false})
   t.Column("amount_remain", "integer",{})
   t.Column("joined_at", "timestamp", {})
+  t.Column("house_no", "string", {})
+  t.Column("county", "string", {})
+  t.Column("post_code", "string", {})
+  t.Column("sub_district", "string", {})
+  t.Column("country", "string", {})
+  t.Column("soi", "string", {})
+  t.Column("road", "string", {})
+  t.Column("created_at", "timestamp", { "null": true})
+  t.Column("updated_at", "timestamp", { "null": true})
 }

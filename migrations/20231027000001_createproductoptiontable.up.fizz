@@ -1,0 +1,11 @@
+create_table("product_option") {
+  t.Column("id", "integer", { primary: true})
+  t.Column("product_id", "integer", {})
+  t.Column("product_option_name", "string", {})
+  t.Column("price", "integer", {})
+  t.Column("active", "bool", {"null": true})
+  t.Column("weight", "float", {"null": true})
+  t.ForeignKey("product_id", {"product": ["id"]})
+  t.Column("created_at", "timestamp", { "null": true})
+  t.Column("updated_at", "timestamp", { "null": true})
+}

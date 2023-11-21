@@ -1,1 +1,0 @@
-drop_foreign_key("product_option", "product_id")

@@ -1,2 +1,0 @@
-drop_foreign_key("promo_code", "user_created")
-drop_foreign_key("promo_code", "use")

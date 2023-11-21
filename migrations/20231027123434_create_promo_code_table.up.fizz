@@ -1,7 +1,9 @@
 create_table("promo_code") {
   t.Column("code", "string", {primary:true})
-  t.Column("user_created", "string", {})
-  t.Column("user_use", "string", {})
-  t.Column("create_date", "timestamp", {})
+  t.Column("user_created", "string", {"null": true})
+  t.Column("user_use", "string", {"null": true})
+  t.Column("pinto_id", "string", {"null": true})
   t.Column("amount", "integer", {})
+  t.Column("created_at", "timestamp", { "null": true})
+  t.Column("updated_at", "timestamp", { "null": true})
 }
