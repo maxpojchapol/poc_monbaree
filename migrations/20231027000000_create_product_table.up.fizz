@@ -1,0 +1,11 @@
+create_table("product") {
+  t.Column("id", "integer", { primary: true })
+  t.Column("product_name", "string", {})
+  t.Column("product_type", "string", {})
+  t.Column("image_url", "string", {"null": true})
+  t.Column("active", "bool", {"null": true})
+  t.Column("vat", "bool", {"null": true})
+  t.Column("product_description", "string", {"null": true})
+  t.Column("created_at", "timestamp", { "null": true})
+  t.Column("updated_at", "timestamp", { "null": true})
+}

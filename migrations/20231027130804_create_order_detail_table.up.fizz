@@ -1,6 +1,13 @@
 create_table("order_detail") {
-  t.Column("id", "integer", {primary:true})
+  t.Column("id", "integer", { primary: true })
   t.Column("order_id", "string", {})
-  t.Column("product", "string", {})
+  t.Column("product_option", "integer", {})
   t.Column("quantity", "integer", {})
+  t.Column("product_name", "string", {"null": true})
+  t.Column("option_price", "integer", {"null": true})
+  t.Column("product_description", "string", {"null": true})
+  t.ForeignKey("order_id", {"order": ["order_id"]})
+  t.ForeignKey("product_option", {"product_option": ["id"]})
+  t.Column("created_at", "timestamp", { "null": true})
+  t.Column("updated_at", "timestamp", { "null": true})
 }

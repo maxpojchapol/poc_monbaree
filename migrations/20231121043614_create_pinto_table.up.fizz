@@ -1,0 +1,10 @@
+create_table("pinto") {
+  t.Column("id", "string", { primary: true})
+  t.Column("date_start", "timestamp", {"null": true})
+  t.Column("date_end", "timestamp", {"null": true})
+  t.Column("duration", "integer", {})
+  t.Column("user_id", "string", {"null": true})
+  t.ForeignKey("user_id", {"users": ["lineuserid"]})
+  t.Column("created_at", "timestamp", { "null": true})
+  t.Column("updated_at", "timestamp", { "null": true})
+}

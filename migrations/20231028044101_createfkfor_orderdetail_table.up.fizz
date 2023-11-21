@@ -1,4 +1,0 @@
-add_foreign_key("order_detail","order_id",{"order":["order_id"]},{
-    "on_delete":"cascade",
-    "on_update":"cascade",
-})
