@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"os/exec"
 	"strconv"
 	"time"
 
@@ -53,7 +54,7 @@ func (m *Repository) UpdateOrderData(w http.ResponseWriter, r *http.Request) {
 			}
 		} else if data.SubmittedType == "shipping" {
 			_, _ = m.DB.UpdateOrderShipping(data.ShippingId, data.OrderId)
-			message = fmt.Sprintf("%s \nส่งสินค้าให้แล้วนะครับ  \nเช็คสถานะพัสดุได้ที่ลิ้งค์นี้\n%s ", data.ShippingId, "https://www.scgexpress.co.th/en/tracking/")
+			message = fmt.Sprintf("tracking number \n%s \nส่งสินค้าให้แล้วนะครับ  \nเช็คสถานะพัสดุได้ที่ลิ้งค์นี้\n%s ", data.ShippingId, "https://www.scgexpress.co.th/en/tracking/")
 			fmt.Println(message)
 			//Update chat to line
 			test(data.IdUserOrder, message)
@@ -138,9 +139,14 @@ func (m *Repository) FilterOrder(w http.ResponseWriter, r *http.Request) {
 	data["haveFile"] = false
 	//Check that this is the export button or not
 	if r.URL.Query().Get("export_file") != "" {
-		fmt.Println("test")
+		fmt.Println("generate file")
 		util.GenerateFile(product_productoption_map)
 		data["haveFile"] = true
+	}
+	if r.URL.Query().Get("export_file_backup") != "" {
+		fmt.Println("generate file db")
+		m.GenerateFileBackup()
+		data["haveFile_backup"] = true
 	}
 
 	render.RenderTemplate(w, r, "order_list.page.tmpl", &models.TemplateData{
@@ -155,6 +161,28 @@ func (m *Repository) ServeFile(w http.ResponseWriter, r *http.Request) {
 
 	// Use http.ServeFile to serve the file
 	http.ServeFile(w, r, filePath)
+}
+func (m *Repository) BackupFile(w http.ResponseWriter, r *http.Request) {
+	// Specify the path to the file you want to serve
+	filePath := "../../static/file/backup.sql" // Replace with the actual file path
+	// Set the response header to indicate the content type
+	        // Open the file
+	file, err := os.Open(filePath)
+	if err != nil {
+		http.Error(w, "File not found", http.StatusNotFound)
+		return
+	}
+	defer file.Close()
+	w.Header().Set("Content-Type", "application/octet-stream")
+
+	// Set the attachment header to prompt the user to download the file
+	w.Header().Set("Content-Disposition", "attachment; filename="+filePath)
+	// Use http.ServeFile to serve the file
+	_, err = io.Copy(w, file)
+	if err != nil {
+		http.Error(w, "Error serving file", http.StatusInternalServerError)
+		return
+	}
 }
 
 func (m *Repository) AddProduct(w http.ResponseWriter, r *http.Request) {
@@ -240,4 +268,23 @@ func (m *Repository) AddProduct(w http.ResponseWriter, r *http.Request) {
 			ProductData: product_productoption_map,
 		})
 	}
+}
+
+func (m *Repository) GenerateFileBackup() {
+	username := os.Getenv("pguser")
+	database := "monbaree"
+	backupFilePath := "../../static/file/backup.sql"
+	pgpassword := os.Getenv("pgpassword")
+	// Prepare the pg_dump command to overwrite the existing file
+	cmd := exec.Command("pg_dump", "-U", username, "-h", "localhost", "-d", database, "-f", backupFilePath)
+
+	cmd.Env = append(os.Environ(), pgpassword)
+	// Run the pg_dump command, which will overwrite the existing file
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println("Error running pg_dump:", err)
+		return
+	}
+
+	fmt.Printf("Database backup saved to: %s\n", backupFilePath)
 }

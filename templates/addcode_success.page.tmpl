@@ -48,6 +48,7 @@
             <form method="post" action="/set_gift_date">
                 <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
                 <input type="hidden" id="date-data" name="date-data" value="...">
+                คุณได้รับปิ่นโตมาจาก : <input id="name-pinto" name="name-pinto" required>
                 <button id="product-nav" type="submit" hidden="true" class="btn btn-success">สำเร็จ</a>
             </form>
             {{end}}
@@ -76,8 +77,8 @@
             option.textContent = i;
             if (i === 1) {
                 option.selected = true;
-                updateData(monthKey, 'daystart', i)
-                updateData(monthKey, 'dayend', i)
+                updateData(monthKey, 'daystart', String(i))
+                updateData(monthKey, 'dayend', String(i))
             }
             const selectStart = document.getElementById(`select-day-start-${monthKey}`);
             const selectEnd = document.getElementById(`select-day-end-${monthKey}`);

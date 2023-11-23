@@ -59,7 +59,7 @@
                                 data-option_price="{{.Price}}" data-option-weight="{{.Weight}}" value="{{.Id}}" 
                                 data-fruit_option="{{.ProductOptionName}}" id="btnradio-{{$index}}-{{$optionindex}}" 
                                 autocomplete="off" name="fruit_option_{{.Product.Id}}"
-                                onclick="appearbutton('{{.Product.Id}}')">
+                                {{if eq $optionindex 0}}checked="checked"{{end}}>
                                 <label class="btn btn-outline-primary mx-2 option" for="btnradio-{{$index}}-{{$optionindex}}">{{.ProductOptionName}}</label>
                             {{end}}
                         </div>
@@ -83,7 +83,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
                     <!-- <button type="submit" class="btn btn-primary addToCart">Buy now</button> -->
-                    <button class="btn btn-primary addToCart" id="addtocart-{{.Product.Id}}" hidden="true" data-bs-dismiss="modal" 
+                    <button class="btn btn-primary addToCart" id="addtocart-{{.Product.Id}}"  data-bs-dismiss="modal" 
                             onclick="addToCart('{{.Product.Id}}','{{.Product.ProductName}}','{{.Product.ProductDescription}}')">เพิ่มใส่ตะกร้า</button>
                 </div>
                     <!-- </form> -->
@@ -123,7 +123,9 @@
                         <!-- Cart items will be displayed here -->
                     </ul>
                     <br>
-                    <!-- <p>น้ำหนักทั้งหมด:<span id="total-weight">0</span> กิโลกรัม</p> -->
+                    <p>น้ำหนักทั้งหมด:<span id="total-weight">0</span> กิโลกรัม</p>
+                    <p>(กล่องไซส์ M น้ำหนักสินค้า 0 - 5 กิโลกรัม) 150 บาท</p>
+                    <p>(กล่องไซส์ L น้ำหนักสินค้า 5 - 10 กิโลกรัม) 300 บาท</p>
                     <p>ราคา: <span id="total">0</span> บาท</p>
                 </div>
 
@@ -132,7 +134,7 @@
                         <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
                         <input type="hidden" id="cart-data" name="cart-data" value="...">
-                        <button data-bs-dismiss="modal" type="submit">ถัดไป</button>
+                        <button data-bs-dismiss="modal" id="button-next" type="submit" >ถัดไป</button>
                     </form>
                 </div>
             </div>
@@ -240,13 +242,13 @@
             // Rest of your code
         }
 
-        function appearbutton(productId){
-            var addcartbutton = document.getElementById('addtocart-' + productId);
-            if (addcartbutton) {
-                // Show the element by removing the 'hidden' attribute
-                addcartbutton.removeAttribute('hidden');
-            }
-        }
+        // function appearbutton(productId){
+        //     var addcartbutton = document.getElementById('addtocart-' + productId);
+        //     if (addcartbutton) {
+        //         // Show the element by removing the 'hidden' attribute
+        //         addcartbutton.removeAttribute('hidden');
+        //     }
+        // }
 
         function updateCart() {
             const cartList = document.getElementById('cart');
@@ -296,8 +298,21 @@
             // Add the row to the cart list
             cartList.appendChild(row);
             });
-            
-            // document.getElementById('total-weight').textContent = total_weight/1000;
+            console.log(cart.length)
+            if (cart.length === 0) {
+                var addcartbutton = document.getElementById('button-next');
+                if (addcartbutton) {
+                    // Show the element by removing the 'hidden' attribute
+                    addcartbutton.style.display = 'none'
+                }
+            } else {
+                    var addcartbutton = document.getElementById('button-next');
+                    if (addcartbutton) {
+                        // Hide the element by adding the 'hidden' attribute
+                        addcartbutton.style.display = 'block'
+                    }
+            }
+            document.getElementById('total-weight').textContent = total_weight/1000;
             document.getElementById('total').textContent = total;
             document.getElementById('cart-data').value = JSON.stringify(cart);
             localStorage.setItem('myCart', JSON.stringify(cart));
@@ -345,4 +360,3 @@
 </script>
 
 {{end}}
-

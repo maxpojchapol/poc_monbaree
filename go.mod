@@ -12,7 +12,10 @@ require (
 	github.com/xuri/excelize/v2 v2.8.0
 )
 
-require github.com/jackc/pgtype v1.14.0 // indirect
+require (
+	github.com/jackc/pgtype v1.14.0 // indirect
+	github.com/lib/pq v1.10.9 // indirect
+)
 
 require (
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect

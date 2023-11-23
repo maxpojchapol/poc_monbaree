@@ -27,7 +27,7 @@ type DatabaseRepo interface {
 	UpdateProduct(models.DataChange)
 	UpdateProductDetail(models.DataChange)
 	UpdatePintoUsed(models.Pinto, models.User) (bool, error)
-	CreateOrderDetailPinto(string) (bool, error)
+	CreateOrderDetailPinto(string,string,string) (bool, error)
 	CreateProduct(models.Product) (int, error)
 	CreateProductOption(models.ProductOption, int) (bool, error)
 	MarkPromoCode(string, models.User) (bool, error)
