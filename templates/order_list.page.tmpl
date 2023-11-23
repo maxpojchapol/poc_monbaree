@@ -21,9 +21,16 @@
                     <input type="date" hidden name="to_date" value="{{.Data.toDate}}">
                     <button class="btn btn-primary" type="submit">ExportFile</button>
                 </form>
+                <form method="get" action="/filter_order" name="export_db" id="export_db" style="display: inline;">
+                    <input type="text" hidden name="export_file_backup" value="true">
+                    <button class="btn btn-primary" type="submit">ExportDB</button>
+                </form>
             </p>
             {{if .Data.haveFile}}
                 <a href="/download">Download File</a>
+            {{end}}
+            {{if .Data.haveFile_backup}}
+                <a href="/backup">Download DB File</a>
             {{end}}
         <br>
         <div class="row">
@@ -89,6 +96,7 @@
                                     <option value="pending" {{if eq .Order.Status "pending"}}selected{{end}}>pending</option>
                                     <option value="paid" {{if eq .Order.Status "paid"}}selected{{end}}>paid</option>
                                     <option value="shipped" {{if eq .Order.Status "shipped"}}selected{{end}}>shipped</option>
+                                    <option value="cancel" {{if eq .Order.Status "cancel"}}selected{{end}}>cancel</option>
                                 </select>
                                 {{else}}
                                     shipped

@@ -460,11 +460,14 @@ func (m *Repository) ManageShippingPrice(total_weight int) models.ShippingCost {
 func (m *Repository) SetGiftDate(w http.ResponseWriter, r *http.Request) {
 	//get data from form of day start and end
 	date_data := r.Form.Get("date-data")
+	name_sender := r.Form.Get("name-pinto")
 	fmt.Println(date_data)
 	type Pinto_day struct {
 		Daystart string `json:"daystart"`
 		Dayend   string `json:"dayend"`
 	}
+	fmt.Println(date_data)
+	fmt.Println(name_sender)
 	pinto_day_list := []Pinto_day{}
 	if err := json.Unmarshal([]byte(date_data), &pinto_day_list); err != nil {
 		fmt.Println("Error parsing JSON:", err)
@@ -497,13 +500,19 @@ func (m *Repository) SetGiftDate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//set order pinto
-	for _, date := range nextDates {
+	dateStrings := make([]string, len(nextDates))
+	for i, date := range nextDates {
 		order_id, _ := m.DB.GetOrderId()
 		_, _ = m.DB.CreateOrder(user, order_id, user.FirstName, user.Address, user.Phone, date, 0, 0, 0, "paid")
-		_, _ = m.DB.CreateOrderDetailPinto(order_id)
+		_, _ = m.DB.CreateOrderDetailPinto(order_id, name_sender, user.FirstName)
+		dateStrings[i] = date.Format("02/01/2006")
 	}
-	message := fmt.Sprint("ระบบจะจัดส่งปิ่นโตให้คุณตามเวลาที่คุณกำหนด")
+	message := "ลงทะเบียนปิ่นโตสำเร็จ\nระบบจะส่งปิ่นโตตามวันที่\n"
+	for _, dateString := range dateStrings {
+		message = message + fmt.Sprintf("%s\n", dateString)
+	}
 	test(user.Lineuserid, message)
-	fmt.Println("Redirect to product")
-	http.Redirect(w, r, "/product", http.StatusSeeOther)
+	fmt.Println("Redirect to success page")
+	render.RenderTemplate(w, r, "set_gift_success.page.tmpl", &models.TemplateData{
+	})
 }

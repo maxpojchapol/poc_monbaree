@@ -41,6 +41,7 @@ func routes(app *config.AppConfig) http.Handler {
 			admin.Post("/manage_product", handlers.Repo.ManageProduct)
 			admin.Post("/update_order_data", handlers.Repo.UpdateOrderData)
 			admin.HandleFunc("/download", handlers.Repo.ServeFile)
+			admin.HandleFunc("/backup", handlers.Repo.BackupFile)
 		})
 
 		// Other authenticated routes

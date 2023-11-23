@@ -637,7 +637,7 @@ func (m *postgresDBRepo) UpdatePintoUsed(pinto models.Pinto, user models.User) (
 	return true, nil
 }
 
-func (m *postgresDBRepo) CreateOrderDetailPinto(orderid string) (bool, error) {
+func (m *postgresDBRepo) CreateOrderDetailPinto(orderid string, sender string, receiver string) (bool, error) {
 	query := `
 	INSERT INTO "order_detail" (order_id,product_name, product_option, quantity, created_at,updated_at,option_price,product_description)
 	VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`
@@ -649,7 +649,7 @@ func (m *postgresDBRepo) CreateOrderDetailPinto(orderid string) (bool, error) {
 		time.Now(),
 		time.Now(),
 		0,
-		"",
+		"จากคุณ "+sender+" ถึงคุณ "+receiver,
 	)
 	if err != nil {
 		fmt.Println(err)
