@@ -45,20 +45,28 @@ func NewHandlers(r *Repository) {
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	// remoteIP := r.RemoteAddr
 	// m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
-
-	render.RenderTemplate(w, r, "home.page.tmpl", &models.TemplateData{})
+	user, _ := m.App.Session.Get(r.Context(), "User").(models.User)
+	render.RenderTemplate(w, r, "home.page.tmpl", &models.TemplateData{
+		User: user,
+	})
 }
 func (m *Repository) Ourfarm(w http.ResponseWriter, r *http.Request) {
-
-	render.RenderTemplate(w, r, "ourfarm.page.tmpl", &models.TemplateData{})
+	user, _ := m.App.Session.Get(r.Context(), "User").(models.User)
+	render.RenderTemplate(w, r, "ourfarm.page.tmpl", &models.TemplateData{
+		User: user,
+	})
 }
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
-
-	render.RenderTemplate(w, r, "about.page.tmpl", &models.TemplateData{})
+	user, _ := m.App.Session.Get(r.Context(), "User").(models.User)
+	render.RenderTemplate(w, r, "about.page.tmpl", &models.TemplateData{
+		User: user,
+	})
 }
 func (m *Repository) Success(w http.ResponseWriter, r *http.Request) {
-
-	render.RenderTemplate(w, r, "success.page.tmpl", &models.TemplateData{})
+	user, _ := m.App.Session.Get(r.Context(), "User").(models.User)
+	render.RenderTemplate(w, r, "success.page.tmpl", &models.TemplateData{
+		User: user,
+	})
 }
 func (m *Repository) Product(w http.ResponseWriter, r *http.Request) {
 	// _, _ = m.DB.QueryProduct()
@@ -324,7 +332,9 @@ func (m *Repository) PostOrder(w http.ResponseWriter, r *http.Request) {
 
 	user.AmountRemain = money_remain
 	m.App.Session.Put(r.Context(), "User", user)
-	render.RenderTemplate(w, r, "success.page.tmpl", &models.TemplateData{})
+	render.RenderTemplate(w, r, "success.page.tmpl", &models.TemplateData{
+		User: user,
+	})
 }
 
 func (m *Repository) Summary(w http.ResponseWriter, r *http.Request) {
@@ -514,5 +524,6 @@ func (m *Repository) SetGiftDate(w http.ResponseWriter, r *http.Request) {
 	test(user.Lineuserid, message)
 	fmt.Println("Redirect to success page")
 	render.RenderTemplate(w, r, "set_gift_success.page.tmpl", &models.TemplateData{
+		User: user,
 	})
 }
