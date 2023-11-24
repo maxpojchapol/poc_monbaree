@@ -9,8 +9,25 @@
         <div class="col text-center">
             <a href="/product" type="button" class="btn btn-success">ไปไหนสินค้า</a>
         </div>
+        <div class="col text-center">
+            <button class="btn btn-success" onclick="closeWindow()">ปิดหน้านี้</button>
+        </div>
     </div>
     
 </div>
 
 {{end}}
+
+<script>
+    function changeText() {
+    const dynamicText = document.getElementById("dynamicText");
+    dynamicText.textContent = "คุณ {{.User.FirstName}} (credit:{{.User.AmountRemain}} THB)" ;// Change the text
+    }
+
+    function closeWindow(){
+        liff.closeWindow();
+    }
+
+    // Call the function when the page is fully loaded
+    window.addEventListener("load", changeText());
+</script>

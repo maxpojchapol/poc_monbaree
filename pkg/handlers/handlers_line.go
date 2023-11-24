@@ -100,8 +100,8 @@ func (m *Repository) BuildOrderMessage(order_id string, listcartItem []models.Ca
 
 		message += itemMessage + "\n"
 	}
-	message += fmt.Sprintf(" ค่าจัดส่งทั้งหมด %d บาท", shipping_data.Total_cost)
-	message += fmt.Sprintf("\n\n รวมทั้งสินเป็นเงิน %d", listcartItem[len(listcartItem)-1].Total+shipping_data.Total_cost)
+	message += fmt.Sprintf("ค่าจัดส่งทั้งหมด %d บาท", shipping_data.Total_cost)
+	message += fmt.Sprintf("\n\nรวมทั้งสินเป็นเงิน %d", listcartItem[len(listcartItem)-1].Total+shipping_data.Total_cost)
 	if amount_data["pay_with_credit"] == false {
 		fmt.Println("This is no credit user")
 		message += " \n\nรบกวนชำระเงินที่ ...."

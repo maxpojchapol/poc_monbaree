@@ -2,18 +2,31 @@
 
 {{define "content"}}
 
-
+<script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.4/sdk.js"></script>
 <div class="row text-center"><h1>รายการสินค้า</h1></div>
 
 <div class="container mt-2">
     
         <form id="filterForm" action="/filter" method="get" >
             <input  type="hidden" id="filterValue" name="filter" value="" />
-            <button type="button" class="btn btn-outline-primary" id="All" onclick="setFilterValue('All')">All</button>
-            <button type="button" class="btn btn-outline-primary" id="Vegetable"onclick="setFilterValue('Vegetable')">Vegetable</button>
-            <button type="button" class="btn btn-outline-primary" id="Fruit" onclick="setFilterValue('Fruit')">Fruit</button>
-            <button type="button" class="btn btn-outline-primary" id="Food_Product"onclick="setFilterValue('Food_Product')">Food Product</button>
-            <button type="button" class="btn btn-outline-primary" id="Non_Food_Product" onclick="setFilterValue('Non_Food_Product')">Non Food Product</button>
+            <div class="button-container" style="display: flex; flex-wrap: nowrap; overflow-x: scroll;">
+                <button type="button" class="btn btn-outline-primary" id="All" onclick="setFilterValue('All')">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
+                </button>
+                <button type="button" class="btn btn-outline-primary" id="Vegetable" onclick="setFilterValue('Vegetable')">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Vegetable</span>
+                </button>
+                <button type="button" class="btn btn-outline-primary" id="Fruit" onclick="setFilterValue('Fruit')">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Fruit</span>
+                </button>
+                <button type="button" class="btn btn-outline-primary" id="Food_Product" onclick="setFilterValue('Food_Product')">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Food Product</span>
+                </button>
+                <button type="button" class="btn btn-outline-primary" id="Non_Food_Product" onclick="setFilterValue('Non_Food_Product')">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Non Food Product</span>
+                </button>
+              </div>
+            
         </form>
 </div>
 <br><br>
@@ -23,7 +36,7 @@
         <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 g-3" id="product-list">
             {{range $index, $productData := .ProductData}}
             <div class="card">
-                <img src="../static/image/{{.Product.ImageUrl}}" class="card-img-top" alt="..." width="450px" height="300px">
+                <img src="../static/image/{{.Product.ImageUrl}}" class="card-img-top" alt="..." width="300px" height="300px">
                 <div class="card-body">
                     <h5 class="card-title">{{.Product.ProductName}}</h5>
                     <p class="card-text">ราคา: {{ (index .Option 0).Price }} บาท</p>
@@ -151,6 +164,7 @@
 <script>
 
     function decrementQuantity(productId) {
+        liff.closeWindow();
         var quantityElement = document.getElementById("quantity_" + productId);
         var currentQuantity = parseInt(quantityElement.value, 10);
 

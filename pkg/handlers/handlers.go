@@ -507,7 +507,7 @@ func (m *Repository) SetGiftDate(w http.ResponseWriter, r *http.Request) {
 		_, _ = m.DB.CreateOrderDetailPinto(order_id, name_sender, user.FirstName)
 		dateStrings[i] = date.Format("02/01/2006")
 	}
-	message := "ลงทะเบียนปิ่นโตสำเร็จ\nระบบจะส่งปิ่นโตตามวันที่\n"
+	message := "เกษตรกรและMonbarree ขอบคุณที่สนับสนุนเราครับ\nระบบจะส่งปิ่นโตตามวันที่\n"
 	for _, dateString := range dateStrings {
 		message = message + fmt.Sprintf("%s\n", dateString)
 	}
