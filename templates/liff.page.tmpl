@@ -8,24 +8,34 @@
 <body>
     <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 </body>
-<script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
+<script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.4/sdk.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
 
     async function main(){
+        
         localStorage.removeItem('myCart')
-        await liff.init({ liffId: "{{.Data.liffid}}",})
+        await liff.init({ liffId: "{{.Data.liffid}}",}).then(()=>{
+            
+        })
 
         if (liff.isLoggedIn()){
-            console.log("login")
-            liff.ready.then(()=>{
-                liff.getProfile().then(profile=>{
-                    console.log(profile)
-                    userId=profile.userId;
-                    send(event)
-                })
-            })
+            console.log("login");
+            liff.ready
+            .then(() => {
+                
+            liff.getProfile().then((profile) => {
+                console.log(profile);
+                userId = profile.userId;
+                send(event);
+
+                // Close the LIFF window
+            });
+        })
+        .catch((error) => {
+            console.error("Error in LIFF ready:", error);
+        });
             // location.replace("https://2716-2001-44c8-417a-b5b2-9449-1deb-8db7-c2c3.ngrok-free.app/register");
         }
         else{
@@ -37,13 +47,15 @@
                     userId=profile.userId;
                 })
             })
-
             // liff.redirectUri("https://2716-2001-44c8-417a-b5b2-9449-1deb-8db7-c2c3.ngrok-free.app/register")
         }
+
     }
     main()
 
     async function send(e){
+        
+        // e.preventDefault();
         var currentURL = window.location.href;
         console.log(currentURL)
         axios.defaults.headers.common['X-CSRF-TOKEN'] = "{{.CSRFToken}}";
@@ -53,13 +65,15 @@
     })
         if (response.status === 200) {
                 // UserID exists, navigate to the product page
-
                 window.location.href = "/product";
+
+
         } else if (response.status === 201) {
                 // UserID doesn't exist, navigate to the register page
                 console.log("go to register page");
                 window.location.href = "/register";
         }
+
     }
 </script>
 </html>

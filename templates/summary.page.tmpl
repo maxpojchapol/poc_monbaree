@@ -26,7 +26,7 @@
                                     <option value="กำหนดวันส่งเอง">กำหนดวันส่งเอง</option>
                                 </select>
                                 <div id="calendar" class="selected-date" style="display: none;">
-                                    <input name="order_date" type="date" value="">
+                                    <input name="order_date" type="date" min="" value="">
                                 </div>
                             </div>
                             
@@ -228,5 +228,27 @@
         document.getElementById('submit').addEventListener('click', function(event) {
             localStorage.removeItem('myCart')
         });
+    </script>
+    <script>
+        // Get the current date and format it as YYYY-MM-DD for the 'min' attribute
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
+
+        // Set the 'min' attribute of the date input to today's date
+        const dateInput = document.querySelector('#calendar input[name="order_date"]');
+        dateInput.min = formattedDate;
+
+        // Optional: Set the initial value to today's date
+        dateInput.value = formattedDate;
+        function changeText() {
+        const dynamicText = document.getElementById("dynamicText");
+        dynamicText.textContent = "คุณ {{.User.FirstName}} (credit:{{.User.AmountRemain}} THB)" ;// Change the text
+        }
+
+    // Call the function when the page is fully loaded
+    window.addEventListener("load", changeText());
     </script>
 {{end}}

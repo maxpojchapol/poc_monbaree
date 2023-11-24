@@ -26,12 +26,13 @@
             <a href="/product" type="button" class="btn btn-success">ไปไหนสินค้า</a>
             {{else}}
             <div class="set-gift">
-                <h2>ยินดีด้วย คุณได้รับปิ่นโตเป็นระยะเวลา {{.Data.Pinto_Redeem}} เดือน </h2>
-                <h2>กรุณากรอกวันที่ต้องการรับปิ่นโตในแต่ละเดือน</h2>
+                <h2>ยินดีด้วย คุณได้รับปิ่นโตเป็นระยะเวลา <br> {{.Data.Pinto_Redeem}} เดือน </h2>
+                <h4>กรุณากรอกวันที่ต้องการรับปิ่นโตในแต่ละเดือน</h4>
                 <div class="set-date">
                     {{range $monthNumber, $month := .IntMap}}
                     <div class="row">
                         <p> <strong>เดือน {{$month}}:</strong> ฉันต้องการรับปิ่นโตในวันที่
+                        <br>
                             <select id="select-day-start-{{$monthNumber}}" style="width: 50px;" onchange="checkSelectionDateStart('{{$monthNumber}}')"></select>
                             และ
                             <select id="select-day-end-{{$monthNumber}}" style="width: 50px;" onchange="checkSelectionDateEnd('{{$monthNumber}}')"></select>
@@ -49,6 +50,8 @@
                 <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
                 <input type="hidden" id="date-data" name="date-data" value="...">
                 คุณได้รับปิ่นโตมาจาก : <input id="name-pinto" name="name-pinto" required>
+                <br>
+                <br>
                 <button id="product-nav" type="submit" hidden="true" class="btn btn-success">สำเร็จ</a>
             </form>
             {{end}}
@@ -124,4 +127,11 @@
             }
         }
     });
+    function changeText() {
+        const dynamicText = document.getElementById("dynamicText");
+        dynamicText.textContent = "คุณ {{.User.FirstName}} (credit:{{.User.AmountRemain}} THB)" ;// Change the text
+    }
+
+    // Call the function when the page is fully loaded
+    window.addEventListener("load", changeText());
 </script>

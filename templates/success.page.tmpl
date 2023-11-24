@@ -1,10 +1,36 @@
 {{template "base" .}}
 
 {{define "content"}}
+<script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.4/sdk.js"></script>
 <div class="div" style="text-align: center;">
     <h1>ทำการสั่งซื้อเรียบร้อย!</h1>
-    <h2> ท่านสามารถเช็ครายการสั่งซื้อผ่าน Line ของท่านได้เลย</h2>
+    <h4> ท่านสามารถเช็ครายการสั่งซื้อผ่าน Line ของท่านได้เลย</h4>
+
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-primary" onclick="closeWindow()">ปิดหน้านี้</button>
+        </div>
+        <div class="col">
+            <a  href="/product"  class="btn btn-primary ">ไปหน้าสินค้า</a>
+        </div>
+
+    </div>
 </div>
 
+{{end}}
 
+{{define "js"}}
+<script>
+    function closeWindow(){
+        liff.closeWindow();
+    }
+
+    function changeText() {
+        const dynamicText = document.getElementById("dynamicText");
+        dynamicText.textContent = "คุณ {{.User.FirstName}} (credit:{{.User.AmountRemain}} THB)" ;// Change the text
+    }
+
+    // Call the function when the page is fully loaded
+    window.addEventListener("load", changeText());
+</script>
 {{end}}
