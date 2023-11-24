@@ -36,7 +36,7 @@
         <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 g-3" id="product-list">
             {{range $index, $productData := .ProductData}}
             <div class="card">
-                <img src="../static/image/{{.Product.ImageUrl}}" class="card-img-top" alt="..." width="300px" height="300px">
+                <img src="../static/image/{{.Product.ImageUrl}}" class="card-img-top" alt="..." width="300px" height="250px">
                 <div class="card-body">
                     <h5 class="card-title">{{.Product.ProductName}}</h5>
                     <p class="card-text">ราคา: {{ (index .Option 0).Price }} บาท</p>
