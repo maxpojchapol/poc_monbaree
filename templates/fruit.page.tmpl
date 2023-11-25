@@ -1,6 +1,22 @@
 {{template "base" .}}
 
 {{define "content"}}
+<style>
+    .custom-button {
+        background-color: transparent; /* Set background to transparent */
+        padding: 0; /* Remove padding */
+        border-color: rgb(230, 230, 230);
+        border-radius: 0.2rem;
+        cursor: pointer; /* Add pointer cursor for interaction */
+        display: flex; /* Use flexbox for aligning text and image */
+        flex-direction: column; /* Stack text and image vertically */
+        align-items: center; /* Center items horizontally */
+        text-align: center; /* Center text horizontally */
+        color: black; /* Text color */
+        text-decoration: none; /* Remove underline (if it's a link) */
+}
+</style>
+
 
 <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.4/sdk.js"></script>
 <div class="row text-center"><h1>รายการสินค้า</h1></div>
@@ -10,19 +26,19 @@
         <form id="filterForm" action="/filter" method="get" >
             <input  type="hidden" id="filterValue" name="filter" value="" />
             <div class="button-container" style="display: flex; flex-wrap: nowrap; overflow-x: scroll;">
-                <button type="button" class="btn btn-outline-primary" id="All" onclick="setFilterValue('All')">
+                <button type="button" class="btn btn-outline-dark" id="All" onclick="setFilterValue('All')">
                   <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
                 </button>
-                <button type="button" class="btn btn-outline-primary" id="Vegetable" onclick="setFilterValue('Vegetable')">
+                <button type="button" class="btn btn-outline-dark" id="Vegetable" onclick="setFilterValue('Vegetable')">
                   <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Vegetable</span>
                 </button>
-                <button type="button" class="btn btn-outline-primary" id="Fruit" onclick="setFilterValue('Fruit')">
+                <button type="button" class="btn btn-outline-dark" id="Fruit" onclick="setFilterValue('Fruit')">
                   <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Fruit</span>
                 </button>
-                <button type="button" class="btn btn-outline-primary" id="Food_Product" onclick="setFilterValue('Food_Product')">
+                <button type="button" class="btn btn-outline-dark" id="Food_Product" onclick="setFilterValue('Food_Product')">
                   <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Food Product</span>
                 </button>
-                <button type="button" class="btn btn-outline-primary" id="Non_Food_Product" onclick="setFilterValue('Non_Food_Product')">
+                <button type="button" class="btn btn-outline-dark" id="Non_Food_Product" onclick="setFilterValue('Non_Food_Product')">
                   <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Non Food Product</span>
                 </button>
               </div>
@@ -69,12 +85,12 @@
                         <input  hidden type="text" id="fruit_name" name="fruit_name" value="{{.Product.Id}}">
                         <div class="option-selected" role="group" aria-label="Basic radio toggle button group" id="data-fruit_option-{{$index}}" >
                             {{range $optionindex, $option := $productData.Option}}
-                                <input type="radio" class="btn-check option-radio" data-product-id="{{.Product.Id}}" 
+                                <input type="radio" class="btn btn-check option-radio" data-product-id="{{.Product.Id}}" 
                                 data-option_price="{{.Price}}" data-option-weight="{{.Weight}}" value="{{.Id}}" 
                                 data-fruit_option="{{.ProductOptionName}}" id="btnradio-{{$index}}-{{$optionindex}}" 
                                 autocomplete="off" name="fruit_option_{{.Product.Id}}"
                                 {{if eq $optionindex 0}}checked="checked"{{end}}>
-                                <label class="btn btn-outline-primary mx-2 option" for="btnradio-{{$index}}-{{$optionindex}}">{{.ProductOptionName}}</label>
+                                <label class="btn btn-outline-dark mx-2 option" for="btnradio-{{$index}}-{{$optionindex}}">{{.ProductOptionName}}</label>
                             {{end}}
                         </div>
                     </div>
@@ -97,7 +113,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
                     <!-- <button type="submit" class="btn btn-primary addToCart">Buy now</button> -->
-                    <button class="btn btn-primary addToCart" id="addtocart-{{.Product.Id}}"  data-bs-dismiss="modal" 
+                    <button class="btn btn-dark addToCart" id="addtocart-{{.Product.Id}}"  data-bs-dismiss="modal" 
                             onclick="addToCart('{{.Product.Id}}','{{.Product.ProductName}}','{{.Product.ProductDescription}}')">เพิ่มใส่ตะกร้า</button>
                 </div>
                     <!-- </form> -->
@@ -108,13 +124,11 @@
 
     {{end}}
 
-    <div class="shopping-cart fixed" style="position: fixed; right: 30px; top: 600px">
-        <button data-bs-toggle="modal" data-bs-target="#cartModal">
+    <div class="shopping-cart fixed" style="position: fixed; right: 40px; top: 600px ; display: none;" id="cartdata">
+        <button data-bs-toggle="modal" data-bs-target="#cartModal" class="custom-button">
             ตะกร้า<br>
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="50" fill="currentColor" class="bi bi-bag" viewBox="0 0 16 16">
-              <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
-            </svg>
-          </button>
+            <img src="../static/image/cart.png" width="30px" height="50px" alt="Custom Cart Image">
+        </button>
     </div>
 
     <div id="cartModal" class="modal fade" tabindex="-1" aria-hidden="true">
@@ -122,7 +136,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">ตะกร้าของฉัน</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" class="btn btn-dark" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -148,7 +162,7 @@
                         <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
                         <input type="hidden" id="cart-data" name="cart-data" value="...">
-                        <button data-bs-dismiss="modal" id="button-next" type="submit" >ถัดไป</button>
+                        <button  class="btn btn-dark" data-bs-dismiss="modal" id="button-next" type="submit" >ถัดไป</button>
                     </form>
                 </div>
             </div>
@@ -304,7 +318,9 @@
             removeColumn.classList.add('col-2');
             const removeBtn = document.createElement('button');
             removeBtn.innerHTML = '&times;';
-            removeBtn.classList.add = 'close';
+            removeBtn.classList.add ('close');
+            removeBtn.classList.add('btn', 'btn-dark');
+
             removeBtn.onclick = () => removeItem(index);
             removeColumn.appendChild(removeBtn);
             row.appendChild(removeColumn);
@@ -315,15 +331,20 @@
             console.log(cart.length)
             if (cart.length === 0) {
                 var addcartbutton = document.getElementById('button-next');
+                var cartbutton = document.getElementById('cartdata');
                 if (addcartbutton) {
                     // Show the element by removing the 'hidden' attribute
                     addcartbutton.style.display = 'none'
+                    cartbutton.style.display = 'none'
                 }
             } else {
                     var addcartbutton = document.getElementById('button-next');
+                    var cartbutton = document.getElementById('cartdata');
+                    
                     if (addcartbutton) {
                         // Hide the element by adding the 'hidden' attribute
                         addcartbutton.style.display = 'block'
+                        cartbutton.style.display = 'block'
                     }
             }
             document.getElementById('total-weight').textContent = total_weight/1000;
@@ -358,8 +379,8 @@
                     console.log('{{.Data.Filter}}')
                     button =  document.getElementById('{{.Data.Filter}}')
                     if (button) {
-                        button.classList.add( 'btn-primary'); 
-                        button.classList.remove('btn-outline-primary');
+                        button.classList.add('btn-dark'); 
+                        button.classList.remove('btn-outline-dark');
                     }
         }
         function setFilterValue(value) {
