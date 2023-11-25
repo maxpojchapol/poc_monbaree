@@ -38,8 +38,9 @@
             <div class="card">
                 <img src="../static/image/{{.Product.ImageUrl}}" class="card-img-top" alt="..." width="300px" height="250px">
                 <div class="card-body">
-                    <h5 class="card-title">{{.Product.ProductName}}</h5>
+                    <h6 class="card-title">{{.Product.ProductName}}</h6>
                     <p class="card-text">ราคา: {{ (index .Option 0).Price }} บาท</p>
+                    <p class="card-text"> ({{ (index .Option 0).ProductOptionName }} )</p>
                     <button class="btn btn-outline-secondary addToCartButton" type="button" value="{{$index}}" data-bs-toggle="modal" data-bs-target='#exampleModal-{{$index}}'>เพิ่มใส่ตะกร้า</button>
                 </div>
             </div>
