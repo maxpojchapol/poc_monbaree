@@ -12,8 +12,17 @@
         flex-direction: column; /* Stack text and image vertically */
         align-items: center; /* Center items horizontally */
         text-align: center; /* Center text horizontally */
-        color: black; /* Text color */
+        color: rgb(255, 255, 255); /* Text color */
         text-decoration: none; /* Remove underline (if it's a link) */
+}
+.btn-outline-pinkd {
+    background-color: #ffffff;
+    color: #DE3163;
+    border-color: #DE3163;
+}
+.btn-pinkd {
+    background-color: #DE3163;
+    color: white;
 }
 </style>
 
@@ -26,19 +35,19 @@
         <form id="filterForm" action="/filter" method="get" >
             <input  type="hidden" id="filterValue" name="filter" value="" />
             <div class="button-container" style="display: flex; flex-wrap: nowrap; overflow-x: scroll;">
-                <button type="button" class="btn btn-outline-dark" id="All" onclick="setFilterValue('All')">
+                <button type="button" class="btn btn-outline-pinkd" id="All" onclick="setFilterValue('All')">
                   <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">All</span>
                 </button>
-                <button type="button" class="btn btn-outline-dark" id="Vegetable" onclick="setFilterValue('Vegetable')">
+                <button type="button" class="btn btn-outline-pinkd" id="Vegetable" onclick="setFilterValue('Vegetable')">
                   <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Vegetable</span>
                 </button>
-                <button type="button" class="btn btn-outline-dark" id="Fruit" onclick="setFilterValue('Fruit')">
+                <button type="button" class="btn btn-outline-pinkd" id="Fruit" onclick="setFilterValue('Fruit')">
                   <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Fruit</span>
                 </button>
-                <button type="button" class="btn btn-outline-dark" id="Food_Product" onclick="setFilterValue('Food_Product')">
+                <button type="button" class="btn btn-outline-pinkd" id="Food_Product" onclick="setFilterValue('Food_Product')">
                   <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Food Product</span>
                 </button>
-                <button type="button" class="btn btn-outline-dark" id="Non_Food_Product" onclick="setFilterValue('Non_Food_Product')">
+                <button type="button" class="btn btn-outline-pinkd" id="Non_Food_Product" onclick="setFilterValue('Non_Food_Product')">
                   <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Non Food Product</span>
                 </button>
               </div>
@@ -124,10 +133,10 @@
 
     {{end}}
 
-    <div class="shopping-cart fixed" style="position: fixed; right: 40px; top: 600px ; display: none;" id="cartdata">
+    <div class="shopping-cart fixed" style="position: fixed; right: 40px; top: 600px ; display: none;border-radius: 0.5rem;padding: 0;margin: 0;" id="cartdata">
         <button data-bs-toggle="modal" data-bs-target="#cartModal" class="custom-button">
-            ตะกร้า<br>
-            <img src="../static/image/cart.png" width="30px" height="50px" alt="Custom Cart Image">
+            <p style="color: black;padding: 0;margin: 0;">ตะกร้า<p>
+            <img src="../static/image/cart.png" width="40px" height="40px" alt="Custom Cart Image" style="padding: 0;margin: 0;">
         </button>
     </div>
 
@@ -379,8 +388,8 @@
                     console.log('{{.Data.Filter}}')
                     button =  document.getElementById('{{.Data.Filter}}')
                     if (button) {
-                        button.classList.add('btn-dark'); 
-                        button.classList.remove('btn-outline-dark');
+                        button.classList.add('btn-pinkd'); 
+                        button.classList.remove('btn-outline-pinkd');
                     }
         }
         function setFilterValue(value) {

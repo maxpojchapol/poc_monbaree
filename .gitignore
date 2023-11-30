@@ -2,5 +2,3 @@
 database.yml
 .env
 test.go
-static/file
-static/image
