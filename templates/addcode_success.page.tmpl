@@ -26,7 +26,7 @@
             <a href="/product" type="button" class="btn btn-success">ไปไหนสินค้า</a>
             {{else}}
             <div class="set-gift">
-                <h2>ยินดีด้วย คุณได้รับปิ่นโตเป็นระยะเวลา <br> {{.Data.Pinto_Redeem}} เดือน </h2>
+                <h3>ยินดีด้วย คุณได้รับปิ่นโตเป็นระยะเวลา <br> {{.Data.Pinto_Redeem}} เดือน </h3>
                 <h4>กรุณากรอกวันที่ต้องการรับปิ่นโตในแต่ละเดือน</h4>
                 <div class="set-date">
                     {{range $monthNumber, $month := .IntMap}}

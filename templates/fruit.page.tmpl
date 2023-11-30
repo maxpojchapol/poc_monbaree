@@ -24,11 +24,20 @@
     background-color: #DE3163;
     color: white;
 }
+
+.btn-check:checked+.btn {
+    background-color: #DE3163;
+    color: white;
+    /* You can adjust other styles as needed */
+}
+
 </style>
 
 
 <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.4/sdk.js"></script>
-<div class="row text-center"><h1>รายการสินค้า</h1></div>
+<div class="row text-center">
+    <h1 style="font-family: 'Prompt'">รายการสินค้า</h1>
+</div>
 
 <div class="container mt-2">
     
@@ -61,12 +70,14 @@
         <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 g-3" id="product-list">
             {{range $index, $productData := .ProductData}}
             <div class="card">
-                <img src="../static/image/{{.Product.ImageUrl}}" class="card-img-top" alt="..." width="300px" height="250px">
-                <div class="card-body">
-                    <h6 class="card-title">{{.Product.ProductName}}</h6>
-                    <p class="card-text">ราคา: {{ (index .Option 0).Price }} บาท</p>
-                    <p class="card-text"> ({{ (index .Option 0).ProductOptionName }} )</p>
-                    <button class="btn btn-outline-secondary addToCartButton" type="button" value="{{$index}}" data-bs-toggle="modal" data-bs-target='#exampleModal-{{$index}}'>เพิ่มใส่ตะกร้า</button>
+                <div class="body" style="text-align: center;">
+                    <img style="margin-top: 5px; border-radius: 0.5rem;" src="../static/image/{{.Product.ImageUrl}}" alt="..." width="150px" height="200px">
+                </div>
+                <div class="card-body" style="text-align: left;">
+                    <h6 style="margin-bottom: 5px;" class="card-title">{{.Product.ProductName}}</h6>
+                    <p style="margin-bottom: 5px;" class="card-text">ราคา: {{ (index .Option 0).Price }} บาท</p>
+                    <p style="margin-bottom: 5px;" class="card-text"> ({{ (index .Option 0).ProductOptionName }})</p>
+                    <button class="btn btn-outline-pinkd addToCartButton" type="button" value="{{$index}}" data-bs-toggle="modal" data-bs-target='#exampleModal-{{$index}}'>เพิ่มใส่ตะกร้า</button>
                 </div>
             </div>
             {{end}}
@@ -86,20 +97,22 @@
                 </div>
                 <div class="modal-body">
                     <!-- <form id="selected-item-to-cart" method="post" class="need-validation"> -->
-                    
-                    <img src="../static/image/{{.Product.ImageUrl}}" class="modal-card-image-{{$index}} img-fluid" alt="">
+                    <div style="text-align: center;">
+                        <img style="border-radius: 0.5rem;" src="../static/image/{{.Product.ImageUrl}}" class="modal-card-image-{{$index}} img-fluid" alt="">
+                    </div>
+                    <br>
                     {{.Product.ProductDescription}}
                     <div class="mb-3">
                         <br>
                         <input  hidden type="text" id="fruit_name" name="fruit_name" value="{{.Product.Id}}">
                         <div class="option-selected" role="group" aria-label="Basic radio toggle button group" id="data-fruit_option-{{$index}}" >
                             {{range $optionindex, $option := $productData.Option}}
-                                <input type="radio" class="btn btn-check option-radio" data-product-id="{{.Product.Id}}" 
+                                <input type="radio" class="btn btn-check option-radio " data-product-id="{{.Product.Id}}" 
                                 data-option_price="{{.Price}}" data-option-weight="{{.Weight}}" value="{{.Id}}" 
                                 data-fruit_option="{{.ProductOptionName}}" id="btnradio-{{$index}}-{{$optionindex}}" 
                                 autocomplete="off" name="fruit_option_{{.Product.Id}}"
                                 {{if eq $optionindex 0}}checked="checked"{{end}}>
-                                <label class="btn btn-outline-dark mx-2 option" for="btnradio-{{$index}}-{{$optionindex}}">{{.ProductOptionName}}</label>
+                                <label class="btn btn-outline-pinkd mx-2 option" for="btnradio-{{$index}}-{{$optionindex}}">{{.ProductOptionName}}</label>
                             {{end}}
                         </div>
                     </div>
@@ -122,7 +135,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
                     <!-- <button type="submit" class="btn btn-primary addToCart">Buy now</button> -->
-                    <button class="btn btn-dark addToCart" id="addtocart-{{.Product.Id}}"  data-bs-dismiss="modal" 
+                    <button class="btn btn-pinkd addToCart" id="addtocart-{{.Product.Id}}"  data-bs-dismiss="modal" 
                             onclick="addToCart('{{.Product.Id}}','{{.Product.ProductName}}','{{.Product.ProductDescription}}')">เพิ่มใส่ตะกร้า</button>
                 </div>
                     <!-- </form> -->
@@ -135,17 +148,17 @@
 
     <div class="shopping-cart fixed" style="position: fixed; right: 40px; top: 600px ; display: none;border-radius: 0.5rem;padding: 0;margin: 0;" id="cartdata">
         <button data-bs-toggle="modal" data-bs-target="#cartModal" class="custom-button">
-            <p style="color: black;padding: 0;margin: 0;">ตะกร้า<p>
+            <p style="color: black;padding: 0;margin: 0; font-family: Prompt;">ตะกร้า<p>
             <img src="../static/image/cart.png" width="40px" height="40px" alt="Custom Cart Image" style="padding: 0;margin: 0;">
         </button>
     </div>
 
-    <div id="cartModal" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div id="cartModal" class="modal fade" tabindex="-1" aria-hidden="true" style="font-family: Prompt;">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">ตะกร้าของฉัน</h5>
-                    <button type="button" class="btn btn-dark" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" class="btn btn-pinkd" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -171,7 +184,7 @@
                         <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
                         <input type="hidden" id="cart-data" name="cart-data" value="...">
-                        <button  class="btn btn-dark" data-bs-dismiss="modal" id="button-next" type="submit" >ถัดไป</button>
+                        <button  class="btn btn-pinkd" data-bs-dismiss="modal" id="button-next" type="submit" >ถัดไป</button>
                     </form>
                 </div>
             </div>
@@ -328,7 +341,7 @@
             const removeBtn = document.createElement('button');
             removeBtn.innerHTML = '&times;';
             removeBtn.classList.add ('close');
-            removeBtn.classList.add('btn', 'btn-dark');
+            removeBtn.classList.add('btn', 'btn-pinkd');
 
             removeBtn.onclick = () => removeItem(index);
             removeColumn.appendChild(removeBtn);

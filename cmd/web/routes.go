@@ -16,7 +16,7 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Use(NoSurf)
 	mux.Use(SessionLoad)
 	mux.Group(func(r chi.Router) {
-		r.Use(handlers.Repo.RequireLogin)
+		// r.Use(handlers.Repo.RequireLogin)
 
 		r.Post("/postorder", handlers.Repo.PostOrder)
 		r.Get("/addcode", handlers.Repo.AddCode)
@@ -31,7 +31,7 @@ func routes(app *config.AppConfig) http.Handler {
 		r.Post("/postline", handlers.Repo.NotifyMessage)
 		//for checking admin
 		mux.Group(func(admin chi.Router) {
-			admin.Use(handlers.Repo.RequireAdmin)
+			// admin.Use(handlers.Repo.RequireAdmin)
 			admin.Get("/admin", handlers.Repo.Admin)
 			admin.Get("/getorder", handlers.Repo.GetOrderTable)
 			admin.Get("/add_product", handlers.Repo.AddProduct)

@@ -1,17 +1,20 @@
 {{template "base" .}}
 
 {{define "content"}}
-    <div class="container">
-        <div class="row" style="background-color: rgb(145, 241, 241);">
+<style>
+
+</style>
+    <div class="container" style="font-family:Prompt ;">
+        <div class="row" style="background-color: rgb(244, 199, 230);">
             <div class="col-sm">
             </div>
             <div class="col-sm" style="text-align: center;">
-                <h1>ออเดอร์ของฉัน</h1>
+                <h2><b>ออเดอร์ของฉัน</b></h2>
             </div>
             <div class="col-sm">
             </div>
         </div>
-        <div class="row" style="background-color: rgb(145, 241, 241);">
+        <div class="row" style="background-color: rgb(244, 199, 230);">
             <form method="post" action="/postorder" id="info-data" name="info-data">
                 <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
                 <div class="col-sm">
@@ -20,6 +23,7 @@
                     <div class="order-summary">
                         <div class="order-details">
                             <div>
+                                <br>
                                 <span style="font-weight: bolder;">วันที่ต้องการจัดส่ง:</span> 
                                 <select id="order-date" name="order-date" onchange="displaycalendar()">
                                     <option value="ส่งทันที">ส่งทันที</option>
@@ -99,8 +103,10 @@
                                     <div class="col-2 text-center">
                                         <span style="font-weight: bolder;">จำนวน</span> 
                                     </div>
-                                    <div class="col-4 text-center">
+                                    <div class="col-2 text-center">
                                         <span style="font-weight: bolder;">ราคา</span> 
+                                    </div>
+                                    <div class="col-2 text-center">
                                     </div>
                                 </div>
 
@@ -112,8 +118,11 @@
                                     <div class="col-2 text-center">
                                         <span style="font-weight: bolder;">{{.Quantity}}</span> 
                                     </div>
-                                    <div class="col-4 text-center">
-                                        <span style="font-weight: bolder;">{{.TotalPrice}} บาท</span> 
+                                    <div class="col-2 text-center">
+                                        <span style="font-weight: bolder;">{{.TotalPrice}}</span> 
+                                    </div>
+                                    <div class="col-2 text-center">
+                                        <span style="font-weight: bolder;">บาท</span> 
                                     </div>
                                 </div>
                                 
@@ -124,8 +133,11 @@
                                         <div class="col-8">
                                             <span style="font-weight: bolder;">ราคาสินค้าทั้งหมด:</span> 
                                         </div>
-                                        <div class="col-4 text-center">
-                                            <span style="font-weight: bolder;">{{.Data.procuct_total_price}} บาท</span> 
+                                        <div class="col-2 text-center">
+                                            <span style="font-weight: bolder;">{{.Data.procuct_total_price}}</span> 
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <span style="font-weight: bolder;">บาท</span> 
                                         </div>
                                     </div>
                                 </div>
@@ -140,8 +152,11 @@
                                                 <ul>{{$description}}</ul>
                                             {{end}}
                                         </div>
-                                        <div class="col-4 text-center">
-                                            <span style="font-weight: bolder;"> {{.ShippingData.Total_cost}} บาท</span> 
+                                        <div class="col-2 text-center">
+                                            <span style="font-weight: bolder;"> {{.ShippingData.Total_cost}}</span> 
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <span style="font-weight: bolder;">บาท</span> 
                                         </div>
                                     </div>
                                 </div>
@@ -151,8 +166,11 @@
                                 <div class="col-8">
                                     <h3>จำนวนเงินทั้งหมด: </h3> 
                                 </div>
-                                <div class="col-4 text-center">
-                                    <h3> {{.Data.total_price}} บาท</h3>
+                                <div class="col-2 text-center">
+                                    <h3> {{.Data.total_price}}</h3>
+                                </div>
+                                <div class="col-2 text-center">
+                                    <h3>บาท</h3>
                                 </div>
                             </div>
                         </div>
@@ -196,6 +214,7 @@
                 <div class="row">
                     <div class="col-3"></div>
                     <div class="col-6">
+                        <br>
                         <div class="row">
                             <button id="submit" type="submit" class="btn btn-primary btn-lg btn-block m-0">{{.MessageAmount.button_message}}</button>
                         </div>
