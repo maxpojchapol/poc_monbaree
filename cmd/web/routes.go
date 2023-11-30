@@ -16,7 +16,7 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Use(NoSurf)
 	mux.Use(SessionLoad)
 	mux.Group(func(r chi.Router) {
-		// r.Use(handlers.Repo.RequireLogin)
+		r.Use(handlers.Repo.RequireLogin)
 
 		r.Post("/postorder", handlers.Repo.PostOrder)
 		r.Get("/addcode", handlers.Repo.AddCode)
@@ -29,9 +29,11 @@ func routes(app *config.AppConfig) http.Handler {
 		r.Get("/filter_order", handlers.Repo.FilterOrder)
 		r.Post("/set_gift_date", handlers.Repo.SetGiftDate)
 		r.Post("/postline", handlers.Repo.NotifyMessage)
+		r.Get("/product", handlers.Repo.Product)
+		r.Get("/filter", handlers.Repo.Filter)
 		//for checking admin
 		mux.Group(func(admin chi.Router) {
-			// admin.Use(handlers.Repo.RequireAdmin)
+			admin.Use(handlers.Repo.RequireAdmin)
 			admin.Get("/admin", handlers.Repo.Admin)
 			admin.Get("/getorder", handlers.Repo.GetOrderTable)
 			admin.Get("/add_product", handlers.Repo.AddProduct)
@@ -48,8 +50,7 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/home", handlers.Repo.Home)
 	mux.Get("/ourstory", handlers.Repo.Ourfarm)
 	mux.Get("/visitmon", handlers.Repo.Visitmon)
-	mux.Get("/product", handlers.Repo.Product)
-	mux.Get("/filter", handlers.Repo.Filter)
+
 	mux.Get("/register", handlers.Repo.Register)
 	mux.Post("/register", handlers.Repo.PostRegister)
 	mux.Get("/", handlers.Repo.Liff)
