@@ -17,15 +17,14 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Use(SessionLoad)
 	mux.Group(func(r chi.Router) {
 		r.Use(handlers.Repo.RequireLogin)
-		r.Get("/home", handlers.Repo.Home)
-		r.Get("/ourfarm", handlers.Repo.Ourfarm)
+
 		r.Post("/postorder", handlers.Repo.PostOrder)
 		r.Get("/addcode", handlers.Repo.AddCode)
 		r.Post("/postcode", handlers.Repo.PostCode)
 		r.Post("/summary", handlers.Repo.Summary)
 		// r.Get("/postcode_success", handlers.Repo.PostCode)
 		r.Get("/success", handlers.Repo.Success)
-		r.Get("/filter", handlers.Repo.Filter)
+
 		r.Get("/filter_admin", handlers.Repo.FilterAdmin)
 		r.Get("/filter_order", handlers.Repo.FilterOrder)
 		r.Post("/set_gift_date", handlers.Repo.SetGiftDate)
@@ -46,9 +45,11 @@ func routes(app *config.AppConfig) http.Handler {
 
 		// Other authenticated routes
 	})
-
-	mux.Get("/about", handlers.Repo.About)
+	mux.Get("/home", handlers.Repo.Home)
+	mux.Get("/ourstory", handlers.Repo.Ourfarm)
+	mux.Get("/visitmon", handlers.Repo.Visitmon)
 	mux.Get("/product", handlers.Repo.Product)
+	mux.Get("/filter", handlers.Repo.Filter)
 	mux.Get("/register", handlers.Repo.Register)
 	mux.Post("/register", handlers.Repo.PostRegister)
 	mux.Get("/", handlers.Repo.Liff)

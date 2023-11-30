@@ -1,0 +1,207 @@
+{{template "base" .}}
+
+{{define "content"}}
+<style>
+
+.carousel-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.carousel {
+    display: flex;
+    overflow: hidden;
+}
+
+.carousel img {
+    width: 250px; /* Adjust the image size as needed */
+    height: auto;
+    margin: 0;
+    transition: transform 0.3s ease-in-out;
+}
+
+.carousel-button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.carousel-button:focus {
+    outline: none;
+}
+</style>
+
+<div class="container">
+    <div class="monbaree-context">
+        <h3 style="font-family: 'Prompt';color: #DE3163;font-weight: bold;" >
+            ที่ม่อนแบรี....มีอะไร
+        </h3>
+        <p  style="font-family: 'Prompt';color: #DE3163;" >
+    
+    
+            ในพื้นที่ ‘โครงการม่อนแบรี’ บนเนื้อที่เกือบ 3 ไร่ ประกอบด้วย
+        </p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="monbaree-farm" style="align-items: center;">
+        <h3 style="font-family: 'Prompt';color: #DE3163;font-weight: bold;" >
+            ม่อนฟาร์ม 
+        </h3>
+        <p  style="font-family: 'Prompt';color: #DE3163;" >
+    
+            Smart Agriculture เป็นการปลูกพืชผักใน greenhouse ให้ทุกท่านได้ลองมาสัมผัสชีวิตเกษตรกรสมัยใหม่ที่ทันสมัยและได้ผลผลิตปลอดภัยต่อสุขภาพ อีกทั้งท่านจะได้สนุกกับการซื้อผัก โดยเลือกเด็ดผักสดๆ จากแปลงด้วยมือของท่านเอง
+        </p>
+        <div class="container" style="width: 100%; height: 500px; background-color: rgb(255, 255, 255);  align-items: center;margin: 0px;padding-left: 5px;padding-right: 5px;">
+            <div id="mycorousel1" class="carousel slide carousel-fade custom-carousel" data-bs-ride="carousel"> <!-- Use col-8 to set the width of the carousel -->
+
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#mycorousel1" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#mycorousel1" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#mycorousel1" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner" style="position: relative;">
+                    <div class="carousel-item active" data-bs-interval="2000">
+                        <img src="../static/image/ม่อนฟาร์ม1.JPG" class="d-block w-100" alt="..." > <!-- Use w-100 to make the image fill the container -->
+        
+                    </div>
+                    <div class="carousel-item" data-bs-interval="2000">
+                        <img src="../static/image/ม่อนฟาร์ม2.JPG" class="d-block w-100" alt="..." >
+        
+                    </div>
+                    <div class="carousel-item" data-bs-interval="2000">
+                        <img src="../static/image/ม่อนฟาร์ม3.JPG" class="d-block w-100" alt="...">
+        
+                    </div>
+        
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<div class="container">
+    <div class="monbaree-tung">
+        <h3 style="font-family: 'Prompt';color: #DE3163;font-weight: bold;" >
+            ม่อนทุ่ง 
+        </h3>
+        <p  style="font-family: 'Prompt';color: #DE3163;" >
+    
+            แปลงปลูกพืชผักสวนครัว นอกจากเป็นจุดถ่ายรูปเช็คอินสวยๆ แล้ว พืชผักเหล่านี้ยังนำมาบริโภคได้ โดยหมุนเวียนเก็บเกี่ยวได้ผลผลิตสดๆ มาจำหน่ายให้ที่นี่
+
+        </p>
+        <div class="container" style="width: 100%; height: 500px; background-color: rgb(255, 255, 255);  align-items: center;margin: 0px;padding-left: 5px;padding-right: 5px;">
+            <div id="mycorousel2" class="carousel slide carousel-fade custom-carousel" data-bs-ride="carousel"> <!-- Use col-8 to set the width of the carousel -->
+
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#mycorousel2" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#mycorousel2" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#mycorousel2" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#mycorousel2" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                    <button type="button" data-bs-target="#mycorousel2" data-bs-slide-to="4" aria-label="Slide 5"></button>
+                </div>
+                <div class="carousel-inner" style="position: relative;">
+                    <div class="carousel-item active" data-bs-interval="2000">
+                        <img src="../static/image/ม่อนทุ่ง1.jpg" class="d-block w-100" alt="..." > <!-- Use w-100 to make the image fill the container -->
+                    </div>
+                    <div class="carousel-item" data-bs-interval="2000">
+                        <img src="../static/image/ม่อนทุ่ง2.JPG" class="d-block w-100" alt="..." >
+                    </div>
+                    <div class="carousel-item" data-bs-interval="2000">
+                        <img src="../static/image/ม่อนทุ่ง3.JPG" class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item" data-bs-interval="2000">
+                        <img src="../static/image/ม่อนทุ่ง4.JPG" class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item" data-bs-interval="2000">
+                        <img src="../static/image/ม่อนทุ่ง5.JPG" class="d-block w-100" alt="...">
+                    </div>
+        
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="container">
+    <div class="monbaree-cafe">
+        <h3 style="font-family: 'Prompt';color: #DE3163;font-weight: bold;" >
+            ม่อนคาเฟ่ 
+        </h3>
+        <p  style="font-family: 'Prompt';color: #DE3163;" >
+    
+            เป็นร้านกาแฟสุดชิค ริมหน้าผา และร่มรื่นใต้ร่มโพธิ์ เป็นคาเฟ่ที่รอต้อนรับท่านด้วยเครื่องดื่มและขนมสุดอร่อย
+
+        </p>
+        <div class="container" style="width: 100%; height: 500px; background-color: rgb(255, 255, 255);  align-items: center;margin: 0px;padding-left: 5px;padding-right: 5px;">
+            <div id="mycorousel3" class="carousel slide carousel-fade custom-carousel" data-bs-ride="carousel"> <!-- Use col-8 to set the width of the carousel -->
+
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#mycorousel3" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#mycorousel3" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#mycorousel3" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                  
+                </div>
+                <div class="carousel-inner" style="position: relative;">
+                    <div class="carousel-item active" data-bs-interval="2000">
+                        <img src="../static/image/ม่อนคาเฟ่1.JPG" class="d-block w-100" alt="..." > <!-- Use w-100 to make the image fill the container -->
+                    </div>
+                    <div class="carousel-item" data-bs-interval="2000">
+                        <img src="../static/image/ม่อนคาเฟ่2.JPG" class="d-block w-100" alt="..." >
+                    </div>
+                    <div class="carousel-item" data-bs-interval="2000">
+                        <img src="../static/image/ม่อนคาเฟ่3.JPG" class="d-block w-100" alt="...">
+                    </div>
+
+        
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="container">
+    <div class="monbaree-kratai">
+        <h3 style="font-family: 'Prompt';color: #DE3163;font-weight: bold;" >
+            ม่อนกระต่าย 
+        </h3>
+        <p  style="font-family: 'Prompt';color: #DE3163;" >
+    
+            เป็นสถานที่สำหรับเด็กๆ คงไม่อยากพลาด เพราะมีกระต่ายหลากหลายพันธุ์ และมีไก่ยักษ์พันธ์ุบราม่า
+            ให้เด็กๆ ได้ใกล้ชิดกับสัตว์ที่เชื่องและน่ารัก
+
+        </p>
+        <div class="container" style="width: 100%; height: 500px; background-color: rgb(255, 255, 255);  align-items: center;margin: 0px;padding-left: 5px;padding-right: 5px;">
+            <div id="mycorousel4" class="carousel slide carousel-fade custom-carousel" data-bs-ride="carousel"> <!-- Use col-8 to set the width of the carousel -->
+
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#mycorousel4" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#mycorousel4" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#mycorousel4" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                   
+                </div>
+                <div class="carousel-inner" style="position: relative;">
+                    <div class="carousel-item active" data-bs-interval="2000">
+                        <img src="../static/image/ม่อนกระต่าย1.jpg" class="d-block w-100" alt="..." > <!-- Use w-100 to make the image fill the container -->
+                    </div>
+                    <div class="carousel-item" data-bs-interval="2000">
+                        <img src="../static/image/ม่อนกระต่าย2.jpg" class="d-block w-100" alt="..." >
+                    </div>
+                    <div class="carousel-item" data-bs-interval="2000">
+                        <img src="../static/image/ม่อนกระต่าย3.JPG" class="d-block w-100" alt="...">
+                    </div>
+        
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{end}}

@@ -1,24 +1,94 @@
 {{template "base" .}}
 
 {{define "content"}}
-    <div class="container">
-        <img src="static/image/ourfarm.jpg" alt="ourfarm" class="img-fluid mx-auto d-block" style="max-width: 50%;">
-    </div>
+<style>
 
-    <div class="container">
-        <h1 class="text-center">Welcome to our farm</h1>
-        <div class="text-center">BlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaa</div>
-        <div class="text-center">BlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaa</div>
-        <div class="text-center">BlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaaBlaBlaaaa</div>
-        <Br>
-        <div class="row">
-            <div class="col text-center">
-                <a type="button" class="btn btn-success">Check out product</a>
-                <a type="button" class="btn btn-success">Buy our product</a>
-            </div>
+</style>
+<br>
+<div class="container" style="width: 100%; height: 500px; background-color: rgb(255, 255, 255); position: relative; align-items: center;margin: 0px;padding-left: 5px;padding-right: 5px;">
+    <div id="mycorousel" class="carousel slide carousel-fade custom-carousel" data-bs-ride="carousel"> <!-- Use col-8 to set the width of the carousel -->
+
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#mycorousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#mycorousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#mycorousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#mycorousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            <button type="button" data-bs-target="#mycorousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+            <button type="button" data-bs-target="#mycorousel" data-bs-slide-to="5" aria-label="Slide 6"></button>
+            <button type="button" data-bs-target="#mycorousel" data-bs-slide-to="6" aria-label="Slide 7"></button>
+            <button type="button" data-bs-target="#mycorousel" data-bs-slide-to="7" aria-label="Slide 8"></button>
+            <button type="button" data-bs-target="#mycorousel" data-bs-slide-to="8" aria-label="Slide 9"></button>
+            <button type="button" data-bs-target="#mycorousel" data-bs-slide-to="9" aria-label="Slide 10"></button>
+            <button type="button" data-bs-target="#mycorousel" data-bs-slide-to="10" aria-label="Slide 11"></button>
         </div>
-        
+        <div class="carousel-inner" style="position: relative;">
+            <div class="carousel-item active" data-bs-interval="2000">
+                <img src="../static/image/ม่อนฟาร์ม1.JPG" class="d-block w-100" alt="..." > <!-- Use w-100 to make the image fill the container -->
+
+            </div>
+            <div class="carousel-item" data-bs-interval="2000">
+                <img src="../static/image/ม่อนฟาร์ม2.JPG" class="d-block w-100" alt="..." >
+
+            </div>
+            <div class="carousel-item" data-bs-interval="2000">
+                <img src="../static/image/ม่อนฟาร์ม3.JPG" class="d-block w-100" alt="...">
+
+            </div>
+            <div class="carousel-item" data-bs-interval="2000">
+                <img src="../static/image/ม่อนทุ่ง1.jpg" class="d-block w-100" alt="..." >
+
+            </div>
+            <div class="carousel-item" data-bs-interval="2000">
+                <img src="../static/image/ม่อนทุ่ง2.jpg" class="d-block w-100" alt="..." >
+
+            </div>
+            <div class="carousel-item" data-bs-interval="2000">
+                <img src="../static/image/ม่อนทุ่ง3.jpg" class="d-block w-100" alt="..." >
+ 
+            </div>
+            <div class="carousel-item" data-bs-interval="2000">
+                <img src="../static/image/ม่อนทุ่ง4.jpg" class="d-block w-100" alt="..." >
+            </div>
+            <div class="carousel-item" data-bs-interval="2000">
+                <img src="../static/image/ม่อนทุ่ง5.jpg" class="d-block w-100" alt="..." >
+            </div>
+            <div class="carousel-item" data-bs-interval="2000">
+                <img src="../static/image/ม่อนกระต่าย1.jpg" class="d-block w-100" alt="..." >
+            </div>
+            <div class="carousel-item" data-bs-interval="2000">
+                <img src="../static/image/ม่อนกระต่าย2.jpg" class="d-block w-100" alt="..." >
+            </div>
+            <div class="carousel-item" data-bs-interval="2000">
+                <img src="../static/image/ม่อนกระต่าย3.jpg" class="d-block w-100" alt="..." >
+            </div>
+
+        </div>
     </div>
+</div>
+<br>
+<br>
+<div class="container" style="position: absolute;">
+    <h3 style="font-family: 'Prompt';color: #DE3163;font-weight: bold;" class="text-center">ม่อนแบรี.........วิสาหกิจเพื่อสังคม</h3>
+    <p  style="font-family: 'Prompt';color: #DE3163;" >
+
+
+        ม่อนแบรีเป็นโครงการวิสาหกิจเพื่อสังคม มุ่งสร้างรายได้แบบพึ่งพาตัวเอง เพื่อประโยชน์สุขของครอบครัวในชุมชน ช่วยสร้างงานให้คนในพื้นที่ ให้โอกาสคนในชุมชนรวมทั้งการจ้างงานผู้สูงอายุ ให้มีรายได้เพิ่มดำเนินการตามหลัก พ.ร.บ.วิสาหกิจชุมชน ปี พ.ศ.2548 กำไรหลังหักค่าใช้จ่ายทั้งหมด จะคืนกลับสู่ชุมชนทั้ง 100% โดยเรามุ่งมั่นนำผลกำไรนี้ไปช่วยเหลือทั้งทางด้านสิ่งแวดล้อมและสังคมของชุมชนโดยตรง
+        <br><br>
+        ม่อนแบรีเลือกผลิตสินค้าที่ให้เกิดการพัฒนาและมีจุดมุ่งหมายหลักในการแก้ปัญหาชุมชน โดยนำเทคโนโลยีทางการเกษตรชั้นสูงมาใช้เพื่อเกษตกรได้ผลผลิตสูงสุดและเป็นมิตรกับสิ่งแวดล้อมตามศาสตร์เศรษฐกิจพอเพียงของในหลวงรัชกาลที่ 9 เราสามารถผลิตอาหารจากธรรมชาติมารับประทานกันเองในครอบครัวเมื่อมีมากก็นำแบ่งปันกัน และได้ประโยชน์ร่วมกัน จัดจำหน่ายแก่ผู้บริโภคโดยตรง และไม่ต้องขึ้นกับกลไกราคาของพ่อค้าคนกลาง จึงกระจายรายได้สู่ชุมชนอย่างเต็มเม็ดเต็มหน่วย สินค้าของม่อนแบรีจะเน้นวัตถุดิบที่มาจากชุมชน ภูมิปัญญาท้องถิ่น โดยปรับให้ร่วมสมัย ทำให้เกิดรายได้ขับเคลื่อนเศรษฐกิจชุมชนที่เข้มแข็งและยั่งยืนไปด้วยกันตลอดไป
+    </p>
+
+    <h3 style="font-family: 'Prompt';color: #DE3163;font-weight: bold;" class="text-center">เกษตรปลอดภัย
+    </h3>
+    <p  style="font-family: 'Prompt';color: #DE3163;" >
+
+
+        <b>วิสาหกิจม่อนเเบรี</b> เราคัดสรรผลิตภัณฑ์ปลอดสารพิษ จากการรวมกลุ่มเกษตรกรที่มีอุดมการณ์เดียวกันในการช่วยกันดูแลรับผิดชอบต่อสิ่งแวดล้อม เช่น ลดการใช้ยาฆ่าแมลง
+        เราใช้วิธีกำจัดศัตรูพืช โดยวิธีธรรมชาติสมัยใหม่ Bio Control หรือชีวภัณฑ์ คือ การใช้สิ่งมีชีวิต ควบคุมกำจัด สิ่งมีชีวิตที่เป็นศัตรูพืช โดยได้คำแนะนำจากนักวิชาการชำนาญการ กรมวิชาการการเกษตร กระทรวงเกษตรและสหกรณ์ โดยวิธีการนี้ สังคมจะได้ประโยชน์ร่วมกัน คือเกษตรกรไม่ต้องสัมผัสสารพิษ ที่เป็นอันตรายต่อสุขภาพและได้ผลผลิตที่ดี ผู้บริโภคก็ปลอดภัย วางใจ ในสินค้าที่ดีต่อสุขภาพ ไม่ก่อให้เกิดโรคภัยจากการสะสมของสารพิษ ไม่ทำร้ายสิ่งแวดล้อมทางธรรมชาติ ทั้ง ดิน นํ้า และอากาศ ได้ผลประโยชน์เกื้อกูลกันทุกฝ่าย
+        
+    </p>
+
+    
+</div>
 
     <!-- <div class="row my-footer">
         <div class="col">left</div>

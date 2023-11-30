@@ -5,13 +5,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Prompt">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-</head>
+    <style>
+      .custom-navbar {
+      background-color: #0F5F5B;
+      color: #ffffff; /* Text color */
+      font-family: 'sans-serif';
+      }
+      .body {
+        font-family: 'Prompt'!important;
+      }
+      .btn {
+        font-family: 'Prompt' !important;
+      }
+        .custom-carousel {
+        background-color: black; /* Set the background color to black */
+        width: 100%; /* Set the width to 100% */
+        height: 500px; /* Set the height to your desired fixed height */
+        position: relative;
+        display: flex; /* Use flexbox to center content vertically */
+        align-items: center; /* Center vertically */
+    }
+    /* Ensure that the images maintain their aspect ratio */
+    .custom-carousel img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+  </style>
+
+  </head>
 <body>
     
-    <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary bg-dark border-bottom border-body" data-bs-theme="dark">
+  <nav class="navbar fixed-top navbar-expand-lg custom-navbar border-bottom border-body" data-bs-theme="dark">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/">Monbarree</a>
+          <a class="navbar-brand font" href="/" style="font-family: Copperplate Gothic Bold;">Monbarree</a>
             <p  id="dynamicText" class="navbar-brand mt-3" style="font-size: 14px;">"User: "<p>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -22,16 +51,16 @@
                 <a class="nav-link active" aria-current="page" href="/home">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/ourfarm">Our Farm</a>
+                <a class="nav-link" href="/ourstory">Our Story</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/product">Our product</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/about">About us</a>
+                <a class="nav-link" href="/visitmon">Visit Mon</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/addcode">Add my code</a>
+                <a class="nav-link" href="/addcode">Redeem</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/admin">Admin</a>
@@ -45,7 +74,6 @@
     <br><br><br><br>
 
       {{block "content" .}}
-
       {{end}}
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>

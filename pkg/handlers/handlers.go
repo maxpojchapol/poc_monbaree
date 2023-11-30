@@ -56,9 +56,9 @@ func (m *Repository) Ourfarm(w http.ResponseWriter, r *http.Request) {
 		User: user,
 	})
 }
-func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) Visitmon(w http.ResponseWriter, r *http.Request) {
 	user, _ := m.App.Session.Get(r.Context(), "User").(models.User)
-	render.RenderTemplate(w, r, "about.page.tmpl", &models.TemplateData{
+	render.RenderTemplate(w, r, "visitmon.page.tmpl", &models.TemplateData{
 		User: user,
 	})
 }
