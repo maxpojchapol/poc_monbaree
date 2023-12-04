@@ -2,7 +2,4 @@
 database.yml
 .env
 test.go
-.config/code.json
-.config/configdb.go
-.config/pinto.json
-.config/product.json
+config/
