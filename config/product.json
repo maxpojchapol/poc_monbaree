@@ -1,0 +1,29 @@
+[
+    {
+        "Productname": "Pinto",
+        "Product type": "Food product",
+        "image_file_name": "pinto.png",
+        "vat": true,
+        "active": true,
+        "product description": "pinto",
+        "product option": "pinto/0/0"
+    },
+    {
+        "Productname": "JamRaspberry",
+        "Product type": "Food product",
+        "image_file_name": "jam.png",
+        "vat": true,
+        "active": true,
+        "product description": "แยมทำเองจาก…",
+        "product option": "ขวดเล็ก/300/60;ขวดใหญ่/600/100"
+    },
+    {
+        "Productname": "Lettuce",
+        "Product type": "Vagetable",
+        "image_file_name": "Lettuce.png",
+        "vat": false,
+        "active": false,
+        "product description": "ผักกาดจาก ...",
+        "product option": "kg/1000/30"
+    }
+]
