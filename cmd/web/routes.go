@@ -22,9 +22,8 @@ func routes(app *config.AppConfig) http.Handler {
 		r.Get("/addcode", handlers.Repo.AddCode)
 		r.Post("/postcode", handlers.Repo.PostCode)
 		r.Post("/summary", handlers.Repo.Summary)
-		// r.Get("/postcode_success", handlers.Repo.PostCode)
+		r.Get("/postcode_success", handlers.Repo.PostCode)
 		r.Get("/success", handlers.Repo.Success)
-
 		r.Get("/filter_admin", handlers.Repo.FilterAdmin)
 		r.Get("/filter_order", handlers.Repo.FilterOrder)
 		r.Post("/set_gift_date", handlers.Repo.SetGiftDate)
