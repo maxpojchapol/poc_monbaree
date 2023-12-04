@@ -54,17 +54,17 @@ func main() {
 		}
 	}
 
-	//create code db
-	list_code := readcodejsonfile()
-	for _, code := range list_code {
-		createcode(conn, code)
-	}
+	// //create code db
+	// list_code := readcodejsonfile()
+	// for _, code := range list_code {
+	// 	createcode(conn, code)
+	// }
 
-	// //create pinto db
-	list_pinto := readpintojsonfile()
-	for _, pinto := range list_pinto {
-		createpinto(conn, pinto)
-	}
+	// // //create pinto db
+	// list_pinto := readpintojsonfile()
+	// for _, pinto := range list_pinto {
+	// 	createpinto(conn, pinto)
+	// }
 
 }
 
