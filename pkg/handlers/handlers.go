@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/maxpojchapol/poc_monbaree/driver"
@@ -428,12 +429,18 @@ func (m *Repository) ManageShippingPrice(total_weight int) models.ShippingCost {
 	lastboxquan := 0
 	lastboxoptionname := box_list[0].OptionName
 	for _, box := range box_list {
-		fmt.Println(total_weight)
+		fmt.Println(float64(total_weight) / 1000)
 		box_quan := int((total_weight / 1000) / box.MaxCapacity)
 		fmt.Println(box.MaxCapacity)
-		if lastboxcap > (total_weight/1000) && box.MaxCapacity < (total_weight/1000) {
+		fmt.Println(lastboxcap)
+		if float64(lastboxcap) > float64(total_weight)/1000 && float64(box.MaxCapacity) < float64(total_weight)/1000 {
+			fmt.Printf("deduct weight,%d", lastboxcap)
 			if len(description) != 0 {
-				description[len(description)-1] = fmt.Sprintf("%s จำนวน %d กล่อง", lastboxoptionname, lastboxquan+1)
+				if strings.Contains(description[len(description)-1], fmt.Sprintf("%s จำนวน", lastboxoptionname)) {
+					description[len(description)-1] = fmt.Sprintf("%s จำนวน %d กล่อง", lastboxoptionname, lastboxquan+1)
+				} else{
+					description = append(description, fmt.Sprintf("%s จำนวน %d กล่อง", lastboxoptionname, lastboxquan+1))
+				}
 			} else {
 				description = append(description, fmt.Sprintf("%s จำนวน %d กล่อง", lastboxoptionname, lastboxquan+1))
 			}
@@ -446,12 +453,11 @@ func (m *Repository) ManageShippingPrice(total_weight int) models.ShippingCost {
 			total_ship_cost += cost
 			total_weight -= box.MaxCapacity * 1000 * box_quan
 			description = append(description, fmt.Sprintf("%s จำนวน %d กล่อง", box.OptionName, int(box_quan)))
-			lastboxprice = box.BoxPrice
-			lastboxcap = box.MaxCapacity
-			lastboxquan = box_quan
-			lastboxoptionname = box.OptionName
 		}
-
+		lastboxprice = box.BoxPrice
+		lastboxcap = box.MaxCapacity
+		lastboxquan = box_quan
+		lastboxoptionname = box.OptionName
 	}
 	if total_weight > 0 {
 		total_ship_cost += box_list[len(box_list)-1].BoxPrice
