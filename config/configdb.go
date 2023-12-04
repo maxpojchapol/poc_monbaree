@@ -100,8 +100,8 @@ func createcode(conn *pgx.Conn, code Code) {
 	fmt.Println("Creating code" + code.Code)
 	// Define the SQL query to insert data and return the ID
 	query := `
-        INSERT INTO promo_code (code, amount)
-        VALUES ($1, $2)
+        INSERT INTO promo_code (code, amount,pinto_id)
+        VALUES ($1, $2,'')
     `
 	_, err := conn.Exec(context.Background(), query,
 		code.Code,
