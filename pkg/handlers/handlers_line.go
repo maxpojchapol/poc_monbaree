@@ -115,19 +115,22 @@ func sendQR(user string) {
 	jsonData, err := json.Marshal(data)
 	if err != nil {
 		// return 0, err
+		fmt.Println("error send message", err)
 	}
 
 	resp, err := makePOSTRequest(LINEAPI, headers, jsonData)
 	if err != nil {
+		fmt.Println("error send message", err)
 		// return 0, err
 	}
 	fmt.Println(resp)
 	// return resp.StatusCode, nil
 }
 
-func (m *Repository) BuildOrderMessage(order_id string, listcartItem []models.CartItem, shipping_data models.ShippingCost, amount_data map[string]interface{}, r *http.Request) {
+func (m *Repository) BuildOrderMessage(order_id string, listcartItem []models.CartItem, shipping_data models.ShippingCost, amount_data map[string]interface{}, r *http.Request) bool {
 	message := fmt.Sprintf("Order %s  \nสินค้าที่สั่ง \n", order_id)
-	user := m.App.Session.Get(r.Context(), "User").(models.User)
+	// user := m.App.Session.Get(r.Context(), "User").(models.User)
+	qr := false
 	for _, item := range listcartItem {
 		itemMessage := fmt.Sprintf("%s จำนวน %d = %d บาท",
 			item.Name, item.Quantity, item.TotalPrice)
@@ -139,13 +142,15 @@ func (m *Repository) BuildOrderMessage(order_id string, listcartItem []models.Ca
 	if amount_data["pay_with_credit"] == false {
 		fmt.Println("This is no credit user")
 		message += " \n\nรบกวนชำระเงินที่ตาม QR Code ด้านล่างครับ"
-		sendQR(user.Lineuserid)
+		qr = true
+		// sendQR(user.Lineuserid)
 	} else {
 		if amount_data["bool_addmoney"] == true {
 			message += fmt.Sprintf("\n\n ยอดเงินในเครดิตปัจจุบัน %d บาท", amount_data["current_money_remain"])
 			message += fmt.Sprintf("\n\n ยอดเงินที่ต้องชำระเพิ่ม %d บาท", amount_data["amount_addmoney"])
 			message += " \n\nรบกวนชำระเงินตาม QR Code ด้านล่างครับ"
-			sendQR(user.Lineuserid)
+			qr = true
+			// sendQR(user.Lineuserid)
 		} else {
 			message += fmt.Sprintf("\n\n ยอดเงินในเครดิตปัจจุบัน %d บาท", amount_data["current_money_remain"])
 			message += fmt.Sprintf("\n\n ยอดเงินในเครดิตคงเหลือ %d บาท", amount_data["next_money_remain"])
@@ -154,4 +159,5 @@ func (m *Repository) BuildOrderMessage(order_id string, listcartItem []models.Ca
 	}
 
 	m.App.Session.Put(r.Context(), "Message", message)
+	return qr
 }
