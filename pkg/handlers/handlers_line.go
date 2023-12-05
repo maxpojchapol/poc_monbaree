@@ -91,9 +91,43 @@ func test(user string, message string) {
 	fmt.Println(resp)
 	// return resp.StatusCode, nil
 }
+func sendQR(user string) {
+
+	var LineAccessToken = os.Getenv("LineAccessToken")
+	Authorization := fmt.Sprintf("Bearer %s", LineAccessToken)
+
+	headers := map[string]string{
+		"Content-Type":  "application/json; charset=UTF-8",
+		"Authorization": Authorization,
+	}
+
+	data := map[string]interface{}{
+		"to": user,
+		"messages": []map[string]string{
+			{
+				"type":               "image",
+				"originalContentUrl": "https://monbarree.com/static/image/QR.jpg",
+				"previewImageUrl":    "https://monbarree.com/static/image/QR.jpg",
+			},
+		},
+	}
+
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		// return 0, err
+	}
+
+	resp, err := makePOSTRequest(LINEAPI, headers, jsonData)
+	if err != nil {
+		// return 0, err
+	}
+	fmt.Println(resp)
+	// return resp.StatusCode, nil
+}
 
 func (m *Repository) BuildOrderMessage(order_id string, listcartItem []models.CartItem, shipping_data models.ShippingCost, amount_data map[string]interface{}, r *http.Request) {
 	message := fmt.Sprintf("Order %s  \nสินค้าที่สั่ง \n", order_id)
+	user := m.App.Session.Get(r.Context(), "User").(models.User)
 	for _, item := range listcartItem {
 		itemMessage := fmt.Sprintf("%s จำนวน %d = %d บาท",
 			item.Name, item.Quantity, item.TotalPrice)
@@ -104,12 +138,14 @@ func (m *Repository) BuildOrderMessage(order_id string, listcartItem []models.Ca
 	message += fmt.Sprintf("\n\nรวมทั้งสินเป็นเงิน %d", listcartItem[len(listcartItem)-1].Total+shipping_data.Total_cost)
 	if amount_data["pay_with_credit"] == false {
 		fmt.Println("This is no credit user")
-		message += " \n\nรบกวนชำระเงินที่ ...."
+		message += " \n\nรบกวนชำระเงินที่ตาม QR Code ด้านล่างครับ"
+		sendQR(user.Lineuserid)
 	} else {
 		if amount_data["bool_addmoney"] == true {
 			message += fmt.Sprintf("\n\n ยอดเงินในเครดิตปัจจุบัน %d บาท", amount_data["current_money_remain"])
 			message += fmt.Sprintf("\n\n ยอดเงินที่ต้องชำระเพิ่ม %d บาท", amount_data["amount_addmoney"])
-			message += " \n\nรบกวนชำระเงินที่ ...."
+			message += " \n\nรบกวนชำระเงินตาม QR Code ด้านล่างครับ"
+			sendQR(user.Lineuserid)
 		} else {
 			message += fmt.Sprintf("\n\n ยอดเงินในเครดิตปัจจุบัน %d บาท", amount_data["current_money_remain"])
 			message += fmt.Sprintf("\n\n ยอดเงินในเครดิตคงเหลือ %d บาท", amount_data["next_money_remain"])
