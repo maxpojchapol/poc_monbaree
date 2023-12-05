@@ -47,7 +47,8 @@ func (m *Repository) UpdateOrderData(w http.ResponseWriter, r *http.Request) {
 		if data.SubmittedType == "status" {
 			_, _ = m.DB.UpdateOrderStatus(data.Status, data.OrderId)
 			if data.Status == "paid" {
-				message = fmt.Sprintf("Order %s  \n ขอบคุณที่สั่งกับทางร้านนะครับ \n หลังจากทางร้านจัดส่งจะแจ้งเลข Shipping ให้นะครับ", data.OrderId)
+				// message = fmt.Sprintf("Order %s  \n ขอบคุณที่สั่งกับทางร้านนะครับ \n หลังจากทางร้านจัดส่งจะแจ้งเลข Shipping ให้นะครับ", data.OrderId)
+				message = fmt.Sprintf("ขอบคุณสำหรับคำสั่งซื้อ\n %s \nทางร้านจะแจ้งเลขติดตามพัสดุ\ntracking no. ให้ท่านทราบในวันถัดไป", data.OrderId)
 				fmt.Println(message)
 				//Update chat to line
 				test(data.IdUserOrder, message)
