@@ -106,8 +106,8 @@ func sendQR(user string) {
 		"messages": []map[string]string{
 			{
 				"type":               "image",
-				"originalContentUrl": "https://monbarree.com/static/image/QR.jpg",
-				"previewImageUrl":    "https://monbarree.com/static/image/QR.jpg",
+				"originalContentUrl": "https://monbarree.com/static/image/QR1.jpg",
+				"previewImageUrl":    "https://monbarree.com/static/image/QR1.jpg",
 			},
 		},
 	}
