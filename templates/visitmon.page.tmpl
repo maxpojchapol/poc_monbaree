@@ -197,3 +197,16 @@
 </div>
 
 {{end}}
+
+{{define "js"}}
+<script>
+function changeText() {
+    const dynamicText = document.getElementById("dynamicText");
+    dynamicText.textContent = "คุณ {{.User.FirstName}} (credit:{{.User.AmountRemain}} THB)" ;// Change the text
+}
+
+// Call the function when the page is fully loaded
+window.addEventListener("load", changeText());
+
+</script>
+{{end}}
