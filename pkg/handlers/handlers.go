@@ -328,8 +328,11 @@ func (m *Repository) PostOrder(w http.ResponseWriter, r *http.Request) {
 	_, _ = m.DB.CreateOrderDetail(listcartItem, order_id)
 
 	//build message for send line noti
-	m.BuildOrderMessage(order_id, listcartItem, shipping_data, amount_data, r)
+	qr := m.BuildOrderMessage(order_id, listcartItem, shipping_data, amount_data, r)
 	m.NotifyMessage(w, r)
+	if qr{
+		sendQR(user.Lineuserid)
+	}
 
 	user.AmountRemain = money_remain
 	m.App.Session.Put(r.Context(), "User", user)
