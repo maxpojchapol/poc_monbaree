@@ -16,8 +16,7 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Use(NoSurf)
 	mux.Use(SessionLoad)
 	mux.Group(func(r chi.Router) {
-		// r.Use(handlers.Repo.RequireLogin)
-
+		r.Use(handlers.Repo.RequireLogin)
 		r.Post("/postorder", handlers.Repo.PostOrder)
 		r.Get("/addcode", handlers.Repo.AddCode)
 		r.Post("/postcode", handlers.Repo.PostCode)
@@ -49,7 +48,6 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/home", handlers.Repo.Home)
 	mux.Get("/ourstory", handlers.Repo.Ourfarm)
 	mux.Get("/visitmon", handlers.Repo.Visitmon)
-
 	mux.Get("/register", handlers.Repo.Register)
 	mux.Post("/register", handlers.Repo.PostRegister)
 	mux.Get("/", handlers.Repo.Liff)
