@@ -168,8 +168,8 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-5">รายการ</div>
-                        <div class="col-3">จำนวน</div>
-                        <div class="col-2">ราคา</div>
+                        <div class="col-3" style="text-align: center;">จำนวน</div>
+                        <div class="col-2" style="text-align: center;">ราคา</div>
                         <div class="col-2"></div>
                     </div>
                     <ul id="cart" class="list-group" style="font-size: 12px;">
@@ -181,8 +181,8 @@
                     <p style="font-size: 12px;">ราคา: <span id="total">0</span> บาท</p>
                     <br>
                     <p style="color: gray;font-size: 12px;text-decoration: underline;">หมายเหตุ</p>
-                    <p style="color: gray;font-size: 10px;">(กล่องไซส์ S น้ำหนักสินค้า 0 - 8 กิโลกรัม) 170 บาท</p>
-                    <p style="color: gray;font-size: 10px;">(กล่องไซส์ M น้ำหนักสินค้า 8 - 15 กิโลกรัม) 190 บาท</p>
+                    <p style="color: gray;font-size: 10px;">(กล่องไซส์ S น้ำหนักสินค้า 0 - 8 กิโลกรัม)   170 บาท</p>
+                    <p style="color: gray;font-size: 10px;">(กล่องไซส์ M น้ำหนักสินค้า 8 - 15 กิโลกรัม)  190 บาท</p>
                     <p style="color: gray;font-size: 10px;">(กล่องไซส์ L น้ำหนักสินค้า 15 - 20 กิโลกรัม) 225 บาท</p>
                     
                 </div>
@@ -334,12 +334,14 @@
             // Create a column for the item quantity
             const quantityColumn = document.createElement('div');
             quantityColumn.classList.add('col-3');
+            quantityColumn.style.textAlign = 'center';
             quantityColumn.textContent = item.quantity;
             row.appendChild(quantityColumn);
 
             // Create a column for the item price
             const priceColumn = document.createElement('div');
             priceColumn.classList.add('col-2');
+            priceColumn.style.textAlign = 'center';
             priceColumn.textContent = `${item.total_price} -`;
             row.appendChild(priceColumn);
 
