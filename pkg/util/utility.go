@@ -80,7 +80,7 @@ func GenerateFile(order_orderdetail_map []models.Order_OrderDetail_map) {
 			f.SetCellValue("Sheet1", "C"+fmt.Sprint(lastrow+2), order.Order.Name)
 			f.SetCellValue("Sheet1", "D"+fmt.Sprint(lastrow+2), order.Order.Address)
 			f.SetCellValue("Sheet1", "E"+fmt.Sprint(lastrow+2), order.Order.Phone)
-			f.SetCellValue("Sheet1", "F"+fmt.Sprint(lastrow+2), detail.OptionPrice*detail.Quantity)
+			f.SetCellValue("Sheet1", "F"+fmt.Sprint(lastrow+2), detail.OptionPrice)
 			f.SetCellValue("Sheet1", "G"+fmt.Sprint(lastrow+2), order.Order.ShippingCost)
 			f.SetCellValue("Sheet1", "H"+fmt.Sprint(lastrow+2), order.Order.TotalPrice)
 			f.SetCellValue("Sheet1", "I"+fmt.Sprint(lastrow+2), detail.ProductOption.ProductId)
