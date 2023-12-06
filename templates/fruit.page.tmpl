@@ -31,6 +31,9 @@
     /* You can adjust other styles as needed */
 }
 
+.smallbutton {
+    font-size: 8px;
+}
 </style>
 
 
@@ -169,15 +172,19 @@
                         <div class="col-2">ราคา</div>
                         <div class="col-2"></div>
                     </div>
-                    <ul id="cart" class="list-group">
+                    <ul id="cart" class="list-group" style="font-size: 12px;">
                         <!-- Cart items will be displayed here -->
                     </ul>
                     <br>
-                    <p>น้ำหนักทั้งหมด:<span id="total-weight">0</span> กิโลกรัม</p>
-                    <p>(กล่องไซส์ S น้ำหนักสินค้า 0 - 8 กิโลกรัม) 170 บาท</p>
-                    <p>(กล่องไซส์ M น้ำหนักสินค้า 8 - 15 กิโลกรัม) 190 บาท</p>
-                    <p>(กล่องไซส์ L น้ำหนักสินค้า 15 - 20 กิโลกรัม) 225 บาท</p>
-                    <p>ราคา: <span id="total">0</span> บาท</p>
+
+                    <p style="font-size: 12px;">น้ำหนักทั้งหมด:<span id="total-weight">0</span> กิโลกรัม</p>
+                    <p style="font-size: 12px;">ราคา: <span id="total">0</span> บาท</p>
+                    <br>
+                    <p style="color: gray;font-size: 12px;text-decoration: underline;">หมายเหตุ</p>
+                    <p style="color: gray;font-size: 10px;">(กล่องไซส์ S น้ำหนักสินค้า 0 - 8 กิโลกรัม) 170 บาท</p>
+                    <p style="color: gray;font-size: 10px;">(กล่องไซส์ M น้ำหนักสินค้า 8 - 15 กิโลกรัม) 190 บาท</p>
+                    <p style="color: gray;font-size: 10px;">(กล่องไซส์ L น้ำหนักสินค้า 15 - 20 กิโลกรัม) 225 บาท</p>
+                    
                 </div>
 
                 <div class="modal-footer">
@@ -343,6 +350,7 @@
             removeBtn.innerHTML = '&times;';
             removeBtn.classList.add ('close');
             removeBtn.classList.add('btn', 'btn-pinkd');
+            removeBtn.classList.add('smallbutton');
 
             removeBtn.onclick = () => removeItem(index);
             removeColumn.appendChild(removeBtn);
