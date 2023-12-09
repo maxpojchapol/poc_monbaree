@@ -161,7 +161,8 @@ func (m *postgresDBRepo) QueryProductOption(query_by_user bool) (bool, []models.
 			p.id AS product_id,
 			p.product_name,
 			p.product_type,
-			p.image_url
+			p.image_url,
+			p.product_description
 		FROM product_option po
 		JOIN product p ON po.product_id = p.id
 	`
@@ -177,7 +178,8 @@ func (m *postgresDBRepo) QueryProductOption(query_by_user bool) (bool, []models.
 			p.id AS product_id,
 			p.product_name,
 			p.product_type,
-			p.image_url
+			p.image_url,
+			p.product_description
 		FROM product_option po
 		JOIN product p ON po.product_id = p.id
 		WHERE po.active=true
@@ -209,6 +211,7 @@ func (m *postgresDBRepo) QueryProductOption(query_by_user bool) (bool, []models.
 			&product_option.Product.ProductName,
 			&product_option.Product.ProductType,
 			&product_option.Product.ImageUrl,
+			&product_option.Product.ProductDescription,
 		)
 		if err != nil {
 			fmt.Println("Error scanning row:", err)
@@ -384,7 +387,10 @@ func (m *postgresDBRepo) CreateOrderDetail(cartitem []models.CartItem, orderid s
 	VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`
 
 	for _, item := range cartitem {
-		fmt.Println(item)
+		fmt.Println("item", item)
+		fmt.Println("quantity", item.Total)
+		fmt.Println("total", item.Quantity)
+		fmt.Println("total", item.Total/item.Quantity)
 		_, err := m.DB.Exec(query,
 			orderid,
 			item.Name,
@@ -404,36 +410,72 @@ func (m *postgresDBRepo) CreateOrderDetail(cartitem []models.CartItem, orderid s
 	return true, nil
 }
 
-func (m *postgresDBRepo) QueryOrder(fromdate time.Time, todate time.Time) (bool, []models.Order) {
+func (m *postgresDBRepo) QueryOrder(fromdate time.Time, todate time.Time, option string) (bool, []models.Order) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	query := `
-	SELECT
-		od.order_id,
-		od.status,
-		od.total_price,
-		od.user_order,
-		od.address,
-		od.shipping_id,
-		od.shipping_cost,
-		od.product_cost,
-		od.weight,
-		od.phone,
-		od.name,
-		od.date,
-		od.created_at,
-		od.updated_at,
-		us.lineuserid,
-		us.first_name,
-		us.last_name,
-		us.address,
-		us.phone
-	FROM "order" od
-	JOIN users us ON od.user_order = us.lineuserid 
-	WHERE od.date BETWEEN $1 AND $2
-	ORDER BY od.order_id;
-`
-	rows, err := m.DB.QueryContext(ctx, query, fromdate, todate)
+
+	var rows *sql.Rows
+	var err error
+
+	if option == "all" {
+		query := `
+		SELECT
+			od.order_id,
+			od.status,
+			od.total_price,
+			od.user_order,
+			od.address,
+			od.shipping_id,
+			od.shipping_cost,
+			od.product_cost,
+			od.weight,
+			od.phone,
+			od.name,
+			od.date,
+			od.created_at,
+			od.updated_at,
+			us.lineuserid,
+			us.first_name,
+			us.last_name,
+			us.address,
+			us.phone
+		FROM "order" od
+		JOIN users us ON od.user_order = us.lineuserid 
+		WHERE od.date BETWEEN $1 AND $2 
+		ORDER BY od.order_id;
+	`
+		rows, err = m.DB.QueryContext(ctx, query, fromdate, todate)
+	} else {
+		query := `
+		SELECT
+			od.order_id,
+			od.status,
+			od.total_price,
+			od.user_order,
+			od.address,
+			od.shipping_id,
+			od.shipping_cost,
+			od.product_cost,
+			od.weight,
+			od.phone,
+			od.name,
+			od.date,
+			od.created_at,
+			od.updated_at,
+			us.lineuserid,
+			us.first_name,
+			us.last_name,
+			us.address,
+			us.phone
+		FROM "order" od
+		JOIN users us ON od.user_order = us.lineuserid 
+		WHERE od.date BETWEEN $1 AND $2 
+		AND od.status = $3
+		ORDER BY od.order_id;
+	`
+		rows, err = m.DB.QueryContext(ctx, query, fromdate, todate, option)
+	}
+
 	if err != nil {
 		// Proper error handling, e.g., log or return an error to indicate failure
 		fmt.Println(err)
@@ -708,4 +750,124 @@ func (m *postgresDBRepo) MarkPromoCode(promocode string, user models.User) (bool
 	}
 	fmt.Println("Update pinto use successful")
 	return true, nil
+}
+
+func (m *postgresDBRepo) QueryOrderById(orderid string) (bool, []models.Order) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	query := `
+		SELECT
+			od.order_id,
+			od.status,
+			od.total_price,
+			od.user_order,
+			od.address,
+			od.shipping_id,
+			od.shipping_cost,
+			od.product_cost,
+			od.weight,
+			od.phone,
+			od.name,
+			od.date,
+			od.created_at,
+			od.updated_at,
+			us.lineuserid,
+			us.first_name,
+			us.last_name,
+			us.address,
+			us.phone
+		FROM "order" od
+		JOIN users us ON od.user_order = us.lineuserid 
+		WHERE od.order_id::TEXT LIKE $1
+	`
+	rows, err := m.DB.QueryContext(ctx, query, "%"+orderid+"%")
+
+	if err != nil {
+		// Proper error handling, e.g., log or return an error to indicate failure
+		fmt.Println(err)
+		return false, nil
+	}
+
+	defer rows.Close()
+	listOrderModel := []models.Order{}
+	for rows.Next() {
+		orderModel := models.Order{}
+		// fmt.Println(rows)
+		err := rows.Scan(
+			&orderModel.OrderId,
+			&orderModel.Status,
+			&orderModel.TotalPrice,
+			&orderModel.UserOrderId,
+			&orderModel.Address,
+			&orderModel.ShippingId,
+			&orderModel.ShippingCost,
+			&orderModel.ProductCost,
+			&orderModel.Weight,
+			&orderModel.Phone,
+			&orderModel.Name,
+			&orderModel.Date,
+			&orderModel.CreatedAt,
+			&orderModel.UpdatedAt,
+			&orderModel.UserOrder.Lineuserid,
+			&orderModel.UserOrder.FirstName,
+			&orderModel.UserOrder.LastName,
+			&orderModel.UserOrder.Address,
+			&orderModel.UserOrder.Phone)
+		if err != nil {
+			// Proper error handling, e.g., log or return an error to indicate failure
+			fmt.Println(err)
+			return false, nil
+		}
+		orderModel.DateString = orderModel.Date.Format("02-01-2006")
+
+		listOrderModel = append(listOrderModel, orderModel)
+
+	}
+	// fmt.Println(listProductModel)
+	return true, listOrderModel
+}
+
+func (m *postgresDBRepo) QueryDiscount() (bool, []models.Product) {
+	var rows *sql.Rows
+	var err error
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	rows, err = m.DB.QueryContext(ctx, `
+    SELECT id, product_name, product_type, product_description, image_url, active
+    FROM product
+    WHERE product_name LIKE '%discount%'
+    ORDER BY id ASC;
+`)
+
+	defer rows.Close()
+	if err != nil {
+		// Proper error handling, e.g., log or return an error to indicate failure
+		fmt.Println(err)
+		return false, nil
+	}
+	defer rows.Close()
+
+	listProductModel := []models.Product{}
+	for rows.Next() {
+		productModel := models.Product{}
+		// fmt.Println(rows)
+		err := rows.Scan(
+			&productModel.Id,
+			&productModel.ProductName,
+			&productModel.ProductType,
+			&productModel.ProductDescription,
+			&productModel.ImageUrl,
+			&productModel.Active)
+		if err != nil {
+			// Proper error handling, e.g., log or return an error to indicate failure
+			fmt.Println(err)
+			return false, nil
+		}
+
+		listProductModel = append(listProductModel, productModel)
+
+	}
+	// fmt.Println(listProductModel)
+	return true, listProductModel
 }

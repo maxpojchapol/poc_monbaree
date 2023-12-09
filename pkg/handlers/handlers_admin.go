@@ -18,13 +18,19 @@ import (
 func (m *Repository) GetOrderTable(w http.ResponseWriter, r *http.Request) {
 	_, orderdetail := m.DB.QueryOrderDetail()
 	// Get all order
+	// fromDate := time.Now().AddDate(0, 0, 0)
 	fromDate := time.Now().AddDate(0, 0, -1)
 	toDate := time.Now()
-	_, orderlist := m.DB.QueryOrder(fromDate, toDate)
+	_, orderlist := m.DB.QueryOrder(fromDate, toDate, "all")
 	product_productoption_map := util.Order_OrderDetail_map(orderlist, orderdetail)
-
+	data := make(map[string]interface{})
+	data["fromDate"] = fromDate.AddDate(0, 0, 1).Format("2006-01-02")
+	data["toDate"] = toDate.Format("2006-01-02")
+	data["filterOption"] = "all"
+	fmt.Println(data)
 	render.RenderTemplate(w, r, "order_list.page.tmpl", &models.TemplateData{
 		OrderData: product_productoption_map,
+		Data:      data,
 	})
 }
 func (m *Repository) Admin(w http.ResponseWriter, r *http.Request) {
@@ -34,7 +40,11 @@ func (m *Repository) Admin(w http.ResponseWriter, r *http.Request) {
 
 func (m *Repository) UpdateOrderData(w http.ResponseWriter, r *http.Request) {
 	formdata := r.Form.Get("form-data")
-
+	option := r.URL.Query().Get("filter_option")
+	if option == "" {
+		option = "all"
+	}
+	fmt.Println(formdata)
 	var updatedOrder []models.UpdateOrder
 
 	if err := json.Unmarshal([]byte(formdata), &updatedOrder); err != nil {
@@ -48,7 +58,7 @@ func (m *Repository) UpdateOrderData(w http.ResponseWriter, r *http.Request) {
 			_, _ = m.DB.UpdateOrderStatus(data.Status, data.OrderId)
 			if data.Status == "paid" {
 				// message = fmt.Sprintf("Order %s  \n ขอบคุณที่สั่งกับทางร้านนะครับ \n หลังจากทางร้านจัดส่งจะแจ้งเลข Shipping ให้นะครับ", data.OrderId)
-				message = fmt.Sprintf("ขอบคุณสำหรับคำสั่งซื้อ\n %s \nทางร้านจะแจ้งเลขติดตามพัสดุ\ntracking no. ให้ท่านทราบในวันถัดไป", data.OrderId)
+				message = fmt.Sprintf("ขอบคุณสำหรับคำสั่งซื้อ\n%s \nทางร้านจะแจ้งเลขติดตามพัสดุ\ntracking no. ให้ท่านทราบในวันถัดไป", data.OrderId)
 				fmt.Println(message)
 				//Update chat to line
 				test(data.IdUserOrder, message)
@@ -78,7 +88,27 @@ func (m *Repository) UpdateOrderData(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}
-	http.Redirect(w, r, "/getorder", http.StatusSeeOther)
+
+	// Query the date for user
+	fromDateString := updatedOrder[0].FromDate
+	toDateString := updatedOrder[0].ToDate
+	fromDate, _ := time.Parse("2006-01-02", fromDateString)
+	toDate, _ := time.Parse("2006-01-02", toDateString)
+	if fromDateString == "" || toDateString == "" {
+		fromDate = time.Now().AddDate(0, 0, -1)
+		toDate = time.Now()
+	}
+	_, orderdetail := m.DB.QueryOrderDetail()
+	// Get all order
+	_, orderlist := m.DB.QueryOrder(fromDate, toDate, option)
+	data := make(map[string]interface{})
+	data["fromDate"] = fromDateString
+	data["toDate"] = toDateString
+	product_productoption_map := util.Order_OrderDetail_map(orderlist, orderdetail)
+	render.RenderTemplate(w, r, "order_list.page.tmpl", &models.TemplateData{
+		OrderData: product_productoption_map,
+		Data:      data,
+	})
 }
 
 func (m *Repository) ManageProduct(w http.ResponseWriter, r *http.Request) {
@@ -127,28 +157,44 @@ func (m *Repository) FilterOrder(w http.ResponseWriter, r *http.Request) {
 	// _, _ = m.DB.QueryProduct()
 	fromDateString := r.URL.Query().Get("from_date")
 	toDateString := r.URL.Query().Get("to_date")
+	orderid := r.URL.Query().Get("orderid")
 	fromDate, _ := time.Parse("2006-01-02", fromDateString)
 	toDate, _ := time.Parse("2006-01-02", toDateString)
-	toDate = toDate.AddDate(0, 0, 1)
+	// toDate = toDate.AddDate(0, 0, 1)
+	option := r.URL.Query().Get("filter_option")
 	_, orderdetail := m.DB.QueryOrderDetail()
 	// Get all order
-	_, orderlist := m.DB.QueryOrder(fromDate, toDate)
+	var orderlist []models.Order
 	data := make(map[string]interface{})
 	data["fromDate"] = fromDateString
 	data["toDate"] = toDateString
+	if orderid == "" {
+		_, orderlist = m.DB.QueryOrder(fromDate, toDate, option)
+
+	} else {
+		_, orderlist = m.DB.QueryOrderById(orderid)
+		data["fromDate"] = ""
+		data["toDate"] = ""
+	}
+
+	data["filterOption"] = option
+	data["OrderId"] = orderid
 	product_productoption_map := util.Order_OrderDetail_map(orderlist, orderdetail)
 	data["haveFile"] = false
 	//Check that this is the export button or not
-	if r.URL.Query().Get("export_file") != "" {
+	if r.URL.Query().Get("export_file") == "true" {
 		fmt.Println("generate file")
 		util.GenerateFile(product_productoption_map)
 		data["haveFile"] = true
 	}
-	if r.URL.Query().Get("export_file_backup") != "" {
+	// if r.URL.Query().Get("export_file_backup") != "" {
+	if r.URL.Query().Get("export_file_backup") == "true" {
 		fmt.Println("generate file db")
 		m.GenerateFileBackup()
 		data["haveFile_backup"] = true
 	}
+
+	// }
 
 	render.RenderTemplate(w, r, "order_list.page.tmpl", &models.TemplateData{
 		OrderData: product_productoption_map,
@@ -167,7 +213,7 @@ func (m *Repository) BackupFile(w http.ResponseWriter, r *http.Request) {
 	// Specify the path to the file you want to serve
 	filePath := "../../static/file/backup.sql" // Replace with the actual file path
 	// Set the response header to indicate the content type
-	        // Open the file
+	// Open the file
 	file, err := os.Open(filePath)
 	if err != nil {
 		http.Error(w, "File not found", http.StatusNotFound)

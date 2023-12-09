@@ -117,6 +117,8 @@ type UpdateOrder struct {
 	ShippingId    string `json:"shippingId"`
 	IdUserOrder   string `json:"IdUserOrder"`
 	Datestring    string `json:"datestring"`
+	FromDate      string `json:"FromDate"`
+	ToDate        string `json:"ToDate"`
 }
 
 type ShippingBox struct {
