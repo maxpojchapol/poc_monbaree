@@ -330,7 +330,7 @@ func (m *Repository) PostOrder(w http.ResponseWriter, r *http.Request) {
 	//build message for send line noti
 	qr := m.BuildOrderMessage(order_id, listcartItem, shipping_data, amount_data, r)
 	m.NotifyMessage(w, r)
-	if qr{
+	if qr {
 		sendQR(user.Lineuserid)
 	}
 
@@ -345,7 +345,6 @@ func (m *Repository) Summary(w http.ResponseWriter, r *http.Request) {
 
 	//Get json cart data from form
 	cart_data := r.Form.Get("cart-data")
-	fmt.Println(cart_data)
 	var cartItems []models.CartItem
 
 	if err := json.Unmarshal([]byte(cart_data), &cartItems); err != nil {
@@ -353,16 +352,59 @@ func (m *Repository) Summary(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	user, _ := m.App.Session.Get(r.Context(), "User").(models.User)
-	m.App.Session.Put(r.Context(), "Cart-data", cart_data)
+
 	//Get the total of product price
 
 	total := cartItems[len(cartItems)-1].Total
 	total_weight := cartItems[len(cartItems)-1].TotalWeight
 	data := make(map[string]interface{})
-	data["procuct_total_price"] = total
 
+	havediscount := 0
+	if total >= 2000 {
+		havediscount = -200
+	} else if 1000 <= total && total < 2000 {
+		havediscount = -100
+	}
+	if havediscount != 0 {
+		// query discount data
+		// _, discount := m.DB.QueryDiscount()
+		_, list_product_option := m.DB.QueryProductOption(false)
+		// product_productoption_map := util.Product_product_option_map(discount, list_product_option)
+		//check that discount exist or not
+		var productoption models.ProductOption
+		fmt.Println(productoption)
+		for _, option := range list_product_option {
+			if option.Price == havediscount && option.Active == true {
+				// add item in cart
+				fmt.Println(option.Product.ProductDescription)
+				newtotal := total + havediscount
+				data := models.CartItem{
+					ID:          option.ProductId,
+					OptionID:    strconv.Itoa(option.Id),
+					Name:        option.Product.ProductName,
+					Description: option.Product.ProductDescription,
+					Quantity:    1,
+					TotalPrice:  havediscount,
+					Total:       newtotal,
+					TotalWeight: total_weight,
+				}
+				cartItems = append(cartItems, data)
+				//discount total price
+				total = newtotal
+				break
+			}
+		}
+	}
+	byte_cart_data, err := json.Marshal(cartItems)
+	cart_data = string(byte_cart_data)
+	if err != nil {
+		fmt.Println("Error parsing JSON:", err)
+		return
+	}
+	m.App.Session.Put(r.Context(), "Cart-data", cart_data)
 	//Calculate the shipping price
 	shipping_data := m.ManageShippingPrice(total_weight)
+	data["procuct_total_price"] = total
 	data["total_price"] = total + shipping_data.Total_cost
 
 	messageAmount := util.ManageAmountRemain(total+shipping_data.Total_cost, user.AmountRemain)
@@ -441,7 +483,7 @@ func (m *Repository) ManageShippingPrice(total_weight int) models.ShippingCost {
 			if len(description) != 0 {
 				if strings.Contains(description[len(description)-1], fmt.Sprintf("%s จำนวน", lastboxoptionname)) {
 					description[len(description)-1] = fmt.Sprintf("%s จำนวน %d กล่อง", lastboxoptionname, lastboxquan+1)
-				} else{
+				} else {
 					description = append(description, fmt.Sprintf("%s จำนวน %d กล่อง", lastboxoptionname, lastboxquan+1))
 				}
 			} else {
