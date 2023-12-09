@@ -7,15 +7,38 @@
             <h2>Filter</h2>
         </div>
             <p>
-                <form method="get" action="/filter_order" style="display: inline;">
+                <form method="get" action="/filter_order" style="display: inline;" id="exportForm">
                     <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
                     Filter from date:
                     <input type="date" name="from_date" value="{{.Data.fromDate}}">
                     to date:
                     <input type="date" name="to_date" value="{{.Data.toDate}}">
                     <button class="btn btn-primary" type="submit">Submit</button>
+                    <br>
+                    Filter order by:
+                    <!-- {{.Data.filterOption}} -->
+                    <select name="filter_option">
+                        <option value="all"{{if eq .Data.filterOption "all"}} selected{{end}}>all</option>
+                        <option value="pending"{{if eq .Data.filterOption "pending"}} selected{{end}}>pending</option>
+                        <option value="paid"{{if eq .Data.filterOption "paid"}} selected{{end}}>paid</option>
+                        <option value="shipped"{{if eq .Data.filterOption "shipped"}} selected{{end}}>shipped</option>
+                        <option value="cancel"{{if eq .Data.filterOption "cancel"}} selected{{end}}>cancel</option>
+                        <!-- Add more options as needed -->
+                    </select>
+                    <br>
+                    OrderId:
+                    <input name="orderid" value="{{.Data.OrderId}}">
+                    <br>
+                    <br>
+                    <input type="text" hidden name="export_file" id="exportFileInput" value="false">
+                    <button class="btn btn-primary" type="button" onclick="toggleExport('exportFileInput')">Export File</button>
+
+                    <input type="text" hidden name="export_file_backup" id="exportFileBackupInput" value="false">
+                    <button class="btn btn-primary" type="button" onclick="toggleExport('exportFileBackupInput')">Export DB</button>
                 </form>
-                <form method="get" action="/filter_order" style="display: inline;">
+
+
+                <!-- <form method="get" action="/filter_order" style="display: inline;">
                     <input type="text" hidden name="export_file" value="true">
                     <input type="date" hidden name="from_date" value="{{.Data.fromDate}}">
                     <input type="date" hidden name="to_date" value="{{.Data.toDate}}">
@@ -24,7 +47,7 @@
                 <form method="get" action="/filter_order" name="export_db" id="export_db" style="display: inline;">
                     <input type="text" hidden name="export_file_backup" value="true">
                     <button class="btn btn-primary" type="submit">ExportDB</button>
-                </form>
+                </form> -->
             </p>
             {{if .Data.haveFile}}
                 <a href="/download">Download File</a>
@@ -34,8 +57,6 @@
             {{end}}
         <br>
         <div class="row">
-
-
             <table class="table">
                 <thead>
                 <tr>
@@ -136,11 +157,13 @@
     let changelist = []; // Array to store cart items
 
     function statusChange(orderId,IdUserOrder) {
-
+        var  fromDate = document.getElementsByName("from_date").value;
+        var toDate = document.getElementsByName("to_date").value;
         var submitButton = document.getElementById("submit-form");
         submitButton.style.display = "block"; // Show the button
         var status = document.getElementById("status"+orderId).value;
-        changelist.push({orderId:orderId,submittedType:"status",status:status,IdUserOrder:IdUserOrder})
+
+        changelist.push({orderId:orderId,submittedType:"status",status:status,IdUserOrder:IdUserOrder,FromDate:'{{.Data.fromDate}}',ToDate:'{{.Data.toDate}}'})
         document.getElementById('form-data').value = JSON.stringify(changelist);
         console.log(changelist)
     }
@@ -149,7 +172,7 @@
         var submitButton = document.getElementById("submit-form");
         submitButton.style.display = "block"; // Show the button
         var shippingId = document.getElementById("shipping-"+orderId).value;
-        changelist.push({orderId:orderId,submittedType:"shipping",shippingId:shippingId,IdUserOrder:IdUserOrder})
+        changelist.push({orderId:orderId,submittedType:"shipping",shippingId:shippingId,IdUserOrder:IdUserOrder,FromDate:'{{.Data.fromDate}}',ToDate:'{{.Data.toDate}}'})
         document.getElementById('form-data').value = JSON.stringify(changelist);
         console.log(changelist)
     }
@@ -157,11 +180,15 @@
         var submitButton = document.getElementById("submit-form");
         submitButton.style.display = "block"; // Show the button
         var datestring = document.getElementById("datechange-"+orderId).value;
-        changelist.push({orderId:orderId,submittedType:"datechange",datestring:datestring,IdUserOrder:IdUserOrder})
+        changelist.push({orderId:orderId,submittedType:"datechange",datestring:datestring,IdUserOrder:IdUserOrder,FromDate:'{{.Data.fromDate}}',ToDate:'{{.Data.toDate}}'})
         document.getElementById('form-data').value = JSON.stringify(changelist);
         console.log(changelist)
     }
     
-    
+    function toggleExport(inputId) {
+        var inputElement = document.getElementById(inputId);
+        inputElement.value = inputElement.value === "true" ? "false" : "true";
+        document.getElementById('exportForm').submit();
+    }
 </script>
 

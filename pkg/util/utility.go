@@ -36,7 +36,6 @@ func GetUserID(r *http.Request) (string, error) {
 
 func ManageAmountRemain(deduct_amount int, remaining_amount int) map[string]interface{} {
 	output := make(map[string]interface{})
-	fmt.Println(output)
 
 	if remaining_amount == 0 {
 		output["pay_with_credit"] = false

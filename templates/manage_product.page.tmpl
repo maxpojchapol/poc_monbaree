@@ -33,7 +33,7 @@
                         <td>
                             {{.Product.ProductName}}
                             <Br>
-                            {{.Product.ProductDescription}}
+                            <input id="option-{{.Product.Id}}" type="text" value="{{.Product.ProductDescription}}" onchange="ProductDescriptionChange(value,'{{.Product.Id}}')">
                         </td>
                         <td>
                             {{range $optionindex, $option := $productData.Option}}
@@ -103,12 +103,12 @@
         updateValue()
     }
 
-    // function ProductDescriptionChange(data,id){
-    //     console.log(data,id)
-    //     displaySubmit()
-    //     datachange.push({ id :id,change_db:"product",change_type:"change", change_field:"product_description", change_data:data})
-    //     updateValue()
-    // }
+    function ProductDescriptionChange(data,id){
+        console.log(data,id)
+        displaySubmit()
+        datachange.push({ id :id,change_db:"product",change_type:"change", change_field:"product_description", change_data:data})
+        updateValue()
+    }
 
     function displaySubmit(){
         var submitButton = document.getElementById("submit-form");
