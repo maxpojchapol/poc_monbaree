@@ -3,3 +3,5 @@ database.yml
 .env
 test.go
 config/
+static/file/backup.sql
+static/file/data.xlsx
