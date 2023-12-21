@@ -179,12 +179,15 @@ func (m *Repository) FilterOrder(w http.ResponseWriter, r *http.Request) {
 
 	data["filterOption"] = option
 	data["OrderId"] = orderid
-	product_productoption_map := util.Order_OrderDetail_map(orderlist, orderdetail)
+	order_orderDetail_map := util.Order_OrderDetail_map(orderlist, orderdetail)
+	_, list_product := m.DB.QueryProduct("", true)
+	_, list_product_option := m.DB.QueryProductOption(true)
+	product_productoption_map := util.Product_product_option_map(list_product, list_product_option)
 	data["haveFile"] = false
 	//Check that this is the export button or not
 	if r.URL.Query().Get("export_file") == "true" {
 		fmt.Println("generate file")
-		util.GenerateFile(product_productoption_map)
+		util.GenerateFile(order_orderDetail_map, product_productoption_map)
 		data["haveFile"] = true
 	}
 	// if r.URL.Query().Get("export_file_backup") != "" {
@@ -197,7 +200,7 @@ func (m *Repository) FilterOrder(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	render.RenderTemplate(w, r, "order_list.page.tmpl", &models.TemplateData{
-		OrderData: product_productoption_map,
+		OrderData: order_orderDetail_map,
 		Data:      data,
 	})
 }
