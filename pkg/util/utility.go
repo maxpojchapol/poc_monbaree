@@ -7,12 +7,17 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/maxpojchapol/poc_monbaree/pkg/models"
-
 	"github.com/xuri/excelize/v2"
 )
+
+type summaryProduct struct {
+	Name     string
+	Quantity int
+}
 
 func GetUserID(r *http.Request) (string, error) {
 	body, err := ioutil.ReadAll(r.Body)
@@ -63,15 +68,17 @@ func ManageAmountRemain(deduct_amount int, remaining_amount int) map[string]inte
 	return output
 }
 
-func GenerateFile(order_orderdetail_map []models.Order_OrderDetail_map) {
+func GenerateFile(order_orderdetail_map []models.Order_OrderDetail_map, product_productoption_map_list []models.Product_Product_option_map) {
 	// Create a new Excel file
 	os.Remove("../../static/file/data.xlsx")
 	f := excelize.NewFile()
+	// listsumproduct := []summaryProduct{}
 
 	// Iterate over the rowData and set values in each cell of the rows
 	fmt.Println(order_orderdetail_map)
 	lastrow := 0
 	setHeader(f)
+	countproduct := make(map[string]int)
 	for _, order := range order_orderdetail_map {
 		for _, detail := range order.OrderDetail {
 			f.SetCellValue("Sheet1", "A"+fmt.Sprint(lastrow+2), order.Order.DateString)
@@ -92,15 +99,37 @@ func GenerateFile(order_orderdetail_map []models.Order_OrderDetail_map) {
 			f.SetCellValue("Sheet1", "P"+fmt.Sprint(lastrow+2), order.Order.ShippingId)
 
 			lastrow += 1
+			countproduct[detail.ProductName] += detail.Quantity
 		}
-		// 	if err != nil {
-		// 		fmt.Println("Error setting cell value:", err)
-		// 		return
-		// 	}
-		// }
+
 	}
 
-	// Save the Excel file with a name (e.g., "example.xlsx")
+	//Add summary sheet for checking each item
+	lastrow = 0
+	f.NewSheet("Summary")
+	f.SetCellValue("Summary", "A1", "สินค้า")
+	f.SetCellValue("Summary", "B1", "จำนวน")
+	for _, productoptionmap := range product_productoption_map_list {
+		for _, option := range productoptionmap.Option {
+			fmt.Println("Add option in excel ", productoptionmap.Product.ProductName+"("+option.ProductOptionName+")")
+			f.SetCellValue("Summary", "A"+fmt.Sprint(lastrow+2), productoptionmap.Product.ProductName+"("+option.ProductOptionName+")")
+
+			if !strings.Contains(productoptionmap.Product.ProductName, "ส่วนลด") {
+				f.SetCellValue("Summary", "B"+fmt.Sprint(lastrow+2), countproduct[productoptionmap.Product.ProductName+"("+option.ProductOptionName+")"])
+			} else {
+				f.SetCellValue("Summary", "B"+fmt.Sprint(lastrow+2), countproduct[productoptionmap.Product.ProductName])
+			}
+
+			// sumproduct := summaryProduct{
+			// 	Name:     productoptionmap.Product.ProductName + "(" + option.ProductOptionName + ")",
+			// 	Quantity: 0,
+			// }
+			// listsumproduct = append(listsumproduct, sumproduct)
+			lastrow += 1
+		}
+	}
+	// fmt.Println(countproduct)
+	// Save the Excel file with a name
 	err := f.SaveAs("../../static/file/data.xlsx")
 	if err != nil {
 		fmt.Println("Error saving Excel file:", err)
@@ -108,6 +137,7 @@ func GenerateFile(order_orderdetail_map []models.Order_OrderDetail_map) {
 	}
 
 	fmt.Println("Excel file created with row data successfully!")
+
 }
 
 func setHeader(f *excelize.File) {
