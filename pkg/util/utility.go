@@ -99,7 +99,10 @@ func GenerateFile(order_orderdetail_map []models.Order_OrderDetail_map, product_
 			f.SetCellValue("Sheet1", "P"+fmt.Sprint(lastrow+2), order.Order.ShippingId)
 
 			lastrow += 1
-			countproduct[detail.ProductName] += detail.Quantity
+			if order.Order.Status == "shipped" {
+				countproduct[detail.ProductName] += detail.Quantity
+			}
+
 		}
 
 	}
