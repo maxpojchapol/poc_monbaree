@@ -110,17 +110,24 @@ func GenerateFile(order_orderdetail_map []models.Order_OrderDetail_map, product_
 	//Add summary sheet for checking each item
 	lastrow = 0
 	f.NewSheet("Summary")
-	f.SetCellValue("Summary", "A1", "สินค้า")
-	f.SetCellValue("Summary", "B1", "จำนวน")
+	f.SetCellValue("Summary", "A1", "Product ID")
+	f.SetCellValue("Summary", "B1", "Product Name")
+	f.SetCellValue("Summary", "C1", "Product Description")
+	f.SetCellValue("Summary", "D1", "Product Option ID")
+	f.SetCellValue("Summary", "E1", "Option Name")
+	f.SetCellValue("Summary", "F1", "Amount")
 	for _, productoptionmap := range product_productoption_map_list {
 		for _, option := range productoptionmap.Option {
-			fmt.Println("Add option in excel ", productoptionmap.Product.ProductName+"("+option.ProductOptionName+")")
-			f.SetCellValue("Summary", "A"+fmt.Sprint(lastrow+2), productoptionmap.Product.ProductName+"("+option.ProductOptionName+")")
+			f.SetCellValue("Summary", "A"+fmt.Sprint(lastrow+2), productoptionmap.Product.Id)
+			f.SetCellValue("Summary", "B"+fmt.Sprint(lastrow+2), productoptionmap.Product.ProductName+"("+option.ProductOptionName+")")
+			f.SetCellValue("Summary", "C"+fmt.Sprint(lastrow+2), productoptionmap.Product.ProductDescription)
+			f.SetCellValue("Summary", "D"+fmt.Sprint(lastrow+2), option.Id)
+			f.SetCellValue("Summary", "E"+fmt.Sprint(lastrow+2), option.ProductOptionName)
 
 			if !strings.Contains(productoptionmap.Product.ProductName, "ส่วนลด") {
-				f.SetCellValue("Summary", "B"+fmt.Sprint(lastrow+2), countproduct[productoptionmap.Product.ProductName+"("+option.ProductOptionName+")"])
+				f.SetCellValue("Summary", "F"+fmt.Sprint(lastrow+2), countproduct[productoptionmap.Product.ProductName+"("+option.ProductOptionName+")"])
 			} else {
-				f.SetCellValue("Summary", "B"+fmt.Sprint(lastrow+2), countproduct[productoptionmap.Product.ProductName])
+				f.SetCellValue("Summary", "F"+fmt.Sprint(lastrow+2), countproduct[productoptionmap.Product.ProductName])
 			}
 
 			// sumproduct := summaryProduct{
