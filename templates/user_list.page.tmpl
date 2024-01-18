@@ -29,7 +29,8 @@
 
                     {{range $index, $Data := .UserData}}
                         <tr>
-                            <td>{{.User.FirstName}}</td>
+                            
+                            <td><a href="./user/{{.User.Lineuserid}}">{{.User.FirstName}}</a></td>
                             <td>{{.User.Phone}}</td>
                             <td>{{.User.AmountRemain}}</td>
                             <td>{{.CreditRedeem}}</td>

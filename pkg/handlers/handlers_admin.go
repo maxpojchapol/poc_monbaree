@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-chi/chi"
 	"github.com/maxpojchapol/poc_monbaree/pkg/models"
 	"github.com/maxpojchapol/poc_monbaree/pkg/render"
 	"github.com/maxpojchapol/poc_monbaree/pkg/util"
@@ -370,4 +371,16 @@ func (m *Repository) GenerateFileBackup() {
 	}
 
 	fmt.Printf("Database backup saved to: %s\n", backupFilePath)
+}
+
+func (m *Repository) GetUserProfile(w http.ResponseWriter, r *http.Request) {
+	// _, _ = m.DB.QueryProduct()
+	id := chi.URLParam(r, "id")
+	_, orderlist := m.DB.QueryOrderByUser(id)
+	_, orderdetail := m.DB.QueryOrderDetail()
+	order_orderDetail_map := util.Order_OrderDetail_map(orderlist, orderdetail)
+	render.RenderTemplate(w, r, "order_list_by_user.page.tmpl", &models.TemplateData{
+		OrderData: order_orderDetail_map,
+	})
+	//Query total order
 }
