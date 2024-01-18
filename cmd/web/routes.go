@@ -34,6 +34,7 @@ func routes(app *config.AppConfig) http.Handler {
 			admin.Use(handlers.Repo.RequireAdmin)
 			admin.Get("/admin", handlers.Repo.Admin)
 			admin.Get("/getorder", handlers.Repo.GetOrderTable)
+			admin.Get("/user_data", handlers.Repo.GetUserTable)
 			admin.Get("/add_product", handlers.Repo.AddProduct)
 			admin.Post("/add_product", handlers.Repo.AddProduct)
 			admin.Get("/manage_product", handlers.Repo.ManageProduct)
