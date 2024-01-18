@@ -573,6 +573,49 @@ func (m *postgresDBRepo) QueryOrderDetail() (bool, []models.OrderDetail) {
 	// fmt.Println(listProductModel)
 	return true, listOrderDetailModel
 }
+func (m *postgresDBRepo) QueryUserDetail() (bool, []models.User) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	query := `
+	SELECT
+		lineuserid,
+		first_name,
+		last_name,
+		phone,
+		amount_remain
+	FROM "users"
+`
+	rows, err := m.DB.QueryContext(ctx, query)
+	if err != nil {
+		// Proper error handling, e.g., log or return an error to indicate failure
+		fmt.Println(err)
+		return false, nil
+	}
+
+	defer rows.Close()
+	listUserDetailModel := []models.User{}
+	for rows.Next() {
+		userDetailModel := models.User{}
+		// fmt.Println(rows)
+		err := rows.Scan(
+			&userDetailModel.Lineuserid,
+			&userDetailModel.FirstName,
+			&userDetailModel.LastName,
+			&userDetailModel.Phone,
+			&userDetailModel.AmountRemain,
+		)
+		if err != nil {
+			// Proper error handling, e.g., log or return an error to indicate failure
+			fmt.Println(err)
+			return false, nil
+		}
+
+		listUserDetailModel = append(listUserDetailModel, userDetailModel)
+
+	}
+	// fmt.Println(listProductModel)
+	return true, listUserDetailModel
+}
 
 func (m *postgresDBRepo) UpdateOrderStatus(status string, orderId string) (bool, error) {
 	query := `UPDATE "order" SET status=$1 WHERE order_id = $2`
@@ -686,7 +729,7 @@ func (m *postgresDBRepo) CreateOrderDetailPinto(orderid string, sender string, r
 	_, err := m.DB.Exec(query,
 		orderid,
 		"Pinto",
-		1,
+		122,
 		1,
 		time.Now(),
 		time.Now(),
@@ -838,7 +881,7 @@ func (m *postgresDBRepo) QueryDiscount() (bool, []models.Product) {
     FROM product
     WHERE product_name LIKE '%discount%'
     ORDER BY id ASC;
-`)
+	`)
 
 	defer rows.Close()
 	if err != nil {
@@ -870,4 +913,97 @@ func (m *postgresDBRepo) QueryDiscount() (bool, []models.Product) {
 	}
 	// fmt.Println(listProductModel)
 	return true, listProductModel
+}
+
+func (m *postgresDBRepo) QueryTotalRedeem(lineuserid string) (int, int) {
+	//Calculate total redeem
+	totalRedeem := 0
+	rows, err := m.DB.Query(`SELECT amount
+	FROM promo_code
+	WHERE user_use=$1 
+	`, lineuserid)
+	defer rows.Close()
+
+	fmt.Println("Credit redeem is", rows)
+	if err != nil {
+		// Proper error handling, e.g., log or return an error to indicate failure
+		fmt.Println(err)
+		return 0, 0
+	}
+	var amountredeem int
+
+	for rows.Next() {
+		err := rows.Scan(
+			&amountredeem)
+		if err != nil {
+			// Proper error handling, e.g., log or return an error to indicate failure
+			fmt.Println(err)
+			return 0, 0
+		}
+
+		totalRedeem += int(amountredeem)
+	}
+
+	//calculate pinto redeem
+	pintoRedeem := 0
+	rows, err = m.DB.Query(`SELECT duration
+	FROM pinto
+	WHERE user_id=$1 
+	`, lineuserid)
+	defer rows.Close()
+
+	fmt.Println("Credit redeem is", rows)
+	if err != nil {
+		// Proper error handling, e.g., log or return an error to indicate failure
+		fmt.Println(err)
+		return 0, 0
+	}
+	var durationredeem int
+
+	for rows.Next() {
+		err := rows.Scan(
+			&durationredeem)
+		if err != nil {
+			// Proper error handling, e.g., log or return an error to indicate failure
+			fmt.Println(err)
+			return 0, 0
+		}
+
+		pintoRedeem += int(durationredeem)
+	}
+	return totalRedeem, pintoRedeem
+}
+
+func (m *postgresDBRepo) QueryTotalSpend(lineuserid string) int {
+	//Calculate total redeem
+	fmt.Println(lineuserid)
+	totalSpend := 0
+	rows, err := m.DB.Query(`
+    SELECT total_price
+    FROM "order"
+    WHERE user_order = $1
+	AND status IN ('paid', 'shipped')
+`, lineuserid)
+	defer rows.Close()
+
+	if err != nil {
+		// Proper error handling, e.g., log or return an error to indicate failure
+		fmt.Println(err)
+		return 0
+	}
+	fmt.Println("Credit spend", rows)
+	var totalprice int
+
+	for rows.Next() {
+		err := rows.Scan(
+			&totalprice)
+		if err != nil {
+			// Proper error handling, e.g., log or return an error to indicate failure
+			fmt.Println(err)
+			return 0
+		}
+
+		totalSpend += int(totalprice)
+	}
+	return totalSpend
 }

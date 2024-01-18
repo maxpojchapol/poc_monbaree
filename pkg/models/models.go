@@ -22,6 +22,14 @@ type User struct {
 	Admin        bool
 }
 
+type User_Credit struct {
+	User         User
+	CreditRedeem int
+	PintoRedeem  int
+	CreditUse    int
+	TotalSpend   int
+}
+
 type PromoCode struct {
 	Code       string
 	UserCreate User

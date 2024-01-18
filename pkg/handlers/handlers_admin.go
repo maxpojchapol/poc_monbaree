@@ -33,6 +33,39 @@ func (m *Repository) GetOrderTable(w http.ResponseWriter, r *http.Request) {
 		Data:      data,
 	})
 }
+func (m *Repository) GetUserTable(w http.ResponseWriter, r *http.Request) {
+	_, userdetail := m.DB.QueryUserDetail()
+	userCredit := []models.User_Credit{}
+	data := make(map[string]int)
+	data["creditredeemed"] = 0
+	data["creditused"] = 0
+	data["creditremain"] = 0
+	data["totalpinto"] = 0
+	data["totalspend"] = 0
+	for _, userdetail := range userdetail {
+		totalredeem, pintoredeem := m.DB.QueryTotalRedeem(userdetail.Lineuserid)
+		totalSpend := m.DB.QueryTotalSpend(userdetail.Lineuserid)
+		userCredit = append(userCredit, models.User_Credit{
+			User:         userdetail,
+			CreditRedeem: totalredeem,
+			PintoRedeem:  pintoredeem,
+			CreditUse:    totalredeem - userdetail.AmountRemain,
+			TotalSpend:   totalSpend,
+		})
+		data["creditredeemed"] += totalredeem
+		data["totalpinto"] += pintoredeem
+		data["creditused"] += (totalredeem - userdetail.AmountRemain)
+		data["totalspend"] += totalSpend
+		data["creditremain"] += userdetail.AmountRemain
+	}
+
+	render.RenderTemplate(w, r, "user_list.page.tmpl", &models.TemplateData{
+		UserData:     userCredit,
+		StringIntMap: data,
+	})
+	fmt.Println(userdetail)
+}
+
 func (m *Repository) Admin(w http.ResponseWriter, r *http.Request) {
 
 	render.RenderTemplate(w, r, "admin.page.tmpl", &models.TemplateData{})

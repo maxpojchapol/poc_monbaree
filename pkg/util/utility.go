@@ -195,3 +195,8 @@ func Createmonthlist(totalmonth int) map[int]interface{} {
 	}
 	return monthSet
 }
+
+func CalculateTotalSpend(lineuserid string) int {
+	fmt.Println("Calculate total spend")
+	return 0
+}
