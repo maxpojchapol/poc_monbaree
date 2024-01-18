@@ -20,5 +20,7 @@ type TemplateData struct {
 	User          User
 	CartItems     []CartItem
 	ShippingData  ShippingCost
+	UserData      []User_Credit
 	MessageAmount map[string]interface{}
+	StringIntMap  map[string]int
 }

@@ -20,6 +20,7 @@ type DatabaseRepo interface {
 	CreateOrderDetail([]models.CartItem, string) (bool, error)
 	QueryOrder(time.Time, time.Time, string) (bool, []models.Order)
 	QueryOrderDetail() (bool, []models.OrderDetail)
+	QueryUserDetail() (bool, []models.User)
 	UpdateOrderStatus(string, string) (bool, error)
 	UpdateOrderShipping(string, string) (bool, error)
 	UpdateOrderDate(time.Time, string) (bool, error)
@@ -33,4 +34,6 @@ type DatabaseRepo interface {
 	MarkPromoCode(string, models.User) (bool, error)
 	QueryOrderById(string) (bool, []models.Order)
 	QueryDiscount() (bool, []models.Product)
+	QueryTotalRedeem(string) (int, int)
+	QueryTotalSpend(string) int
 }

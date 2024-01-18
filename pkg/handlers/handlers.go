@@ -522,19 +522,23 @@ func (m *Repository) SetGiftDate(w http.ResponseWriter, r *http.Request) {
 	//get data from form of day start and end
 	date_data := r.Form.Get("date-data")
 	name_sender := r.Form.Get("name-pinto")
-	fmt.Println(date_data)
 	type Pinto_day struct {
 		Daystart string `json:"daystart"`
 		Dayend   string `json:"dayend"`
 	}
-	fmt.Println(date_data)
-	fmt.Println(name_sender)
+
 	pinto_day_list := []Pinto_day{}
 	if err := json.Unmarshal([]byte(date_data), &pinto_day_list); err != nil {
 		fmt.Println("Error parsing JSON:", err)
 		return
 	}
-
+	var filteredList []Pinto_day
+	for _, data := range pinto_day_list {
+		if data.Daystart != "" {
+			filteredList = append(filteredList, data)
+		}
+	}
+	fmt.Println("date data is", filteredList)
 	pinto, _ := m.App.Session.Get(r.Context(), "pinto").(models.Pinto)
 
 	user, _ := m.App.Session.Get(r.Context(), "User").(models.User)
@@ -543,8 +547,8 @@ func (m *Repository) SetGiftDate(w http.ResponseWriter, r *http.Request) {
 	var nextDates []time.Time
 
 	for i := 1; i <= pinto.Duration; i++ {
-		day_start_int, _ := strconv.Atoi(pinto_day_list[i-1].Daystart)
-		day_end_int, _ := strconv.Atoi(pinto_day_list[i-1].Dayend)
+		day_start_int, _ := strconv.Atoi(filteredList[i-1].Daystart)
+		day_end_int, _ := strconv.Atoi(filteredList[i-1].Dayend)
 		nextDate := time.Now()
 		nextDate = nextDate.AddDate(0, i, 0)
 
@@ -555,6 +559,8 @@ func (m *Repository) SetGiftDate(w http.ResponseWriter, r *http.Request) {
 		nextDates = append(nextDates, nextDate)
 	}
 
+	fmt.Println("Pinto date is set day by", nextDates)
+
 	ok, _ := m.DB.UpdatePintoUsed(pinto, user)
 	if !ok {
 		fmt.Println("Cannot update pinto as used")
@@ -564,7 +570,7 @@ func (m *Repository) SetGiftDate(w http.ResponseWriter, r *http.Request) {
 	dateStrings := make([]string, len(nextDates))
 	for i, date := range nextDates {
 		order_id, _ := m.DB.GetOrderId()
-		_, _ = m.DB.CreateOrder(user, order_id, user.FirstName, user.Address, user.Phone, date, 0, 0, 0, "paid")
+		_, _ = m.DB.CreateOrder(user, order_id, user.FirstName, user.Address, user.Phone, date.AddDate(0, 0, -1), 0, 0, 0, "paid")
 		_, _ = m.DB.CreateOrderDetailPinto(order_id, name_sender, user.FirstName)
 		dateStrings[i] = date.Format("02/01/2006")
 	}
