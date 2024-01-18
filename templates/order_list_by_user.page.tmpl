@@ -1,0 +1,119 @@
+{{template "base" .}}
+
+{{define "content"}}
+
+    <div class="container">
+        <div class="row">
+            <table class="table">
+                <thead>
+                <tr style="text-align: center;">
+                    <th scope="col">OrderId</th>
+                    <th scope="col">OrderDate</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">OrderDetail</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">UnitPrice</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">ShippingId</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                    {{range $index, $productData := .OrderData}}
+                        <tr >
+                            <td>
+                                {{.Order.OrderId}}
+                            </td>
+                            <td >
+                                <!-- <div class="row"> -->
+                                      {{.Order.DateString}}
+                                <!-- </div> -->
+                            </td>
+                            <td>{{.Order.UserOrder.FirstName}}</td>
+                            <td>
+                                {{range .OrderDetail}}
+                                    <div class="row">
+                                            -{{.ProductName}}
+                                    </div>
+                                {{end}}
+                            </td>
+                            <td>
+                                {{range .OrderDetail}}
+                                    <div class="row">
+                                            -{{.ProductDescription}}
+                                    </div>
+                                {{end}}
+                            </td>
+                            <td>
+                                {{range .OrderDetail}}
+                                    <div class="row" >
+                                        {{.OptionPrice}} บาท
+                                    </div>
+                                {{end}}
+                            </td>
+                            <td style="text-align: center;">
+                                {{range .OrderDetail}}
+                                    <div>{{.Quantity}}</div>
+                                {{end}}
+                            </td>
+                            <td>{{.Order.TotalPrice}} บาท</td>
+                            <td>
+                                {{.Order.Status}}
+                                
+                            </td>
+                            <td>
+                                {{.Order.ShippingId}}
+                            </td>
+                        </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+
+
+        
+    </div>
+
+{{end}}
+
+<script>
+    let changelist = []; // Array to store cart items
+
+    function statusChange(orderId,IdUserOrder) {
+        var  fromDate = document.getElementsByName("from_date").value;
+        var toDate = document.getElementsByName("to_date").value;
+        var submitButton = document.getElementById("submit-form");
+        submitButton.style.display = "block"; // Show the button
+        var status = document.getElementById("status"+orderId).value;
+
+        changelist.push({orderId:orderId,submittedType:"status",status:status,IdUserOrder:IdUserOrder,FromDate:'{{.Data.fromDate}}',ToDate:'{{.Data.toDate}}'})
+        document.getElementById('form-data').value = JSON.stringify(changelist);
+        console.log(changelist)
+    }
+
+    function ShippingChange(orderId,IdUserOrder) {
+        var submitButton = document.getElementById("submit-form");
+        submitButton.style.display = "block"; // Show the button
+        var shippingId = document.getElementById("shipping-"+orderId).value;
+        changelist.push({orderId:orderId,submittedType:"shipping",shippingId:shippingId,IdUserOrder:IdUserOrder,FromDate:'{{.Data.fromDate}}',ToDate:'{{.Data.toDate}}'})
+        document.getElementById('form-data').value = JSON.stringify(changelist);
+        console.log(changelist)
+    }
+    function DateChange(orderId,IdUserOrder) {
+        var submitButton = document.getElementById("submit-form");
+        submitButton.style.display = "block"; // Show the button
+        var datestring = document.getElementById("datechange-"+orderId).value;
+        changelist.push({orderId:orderId,submittedType:"datechange",datestring:datestring,IdUserOrder:IdUserOrder,FromDate:'{{.Data.fromDate}}',ToDate:'{{.Data.toDate}}'})
+        document.getElementById('form-data').value = JSON.stringify(changelist);
+        console.log(changelist)
+    }
+    
+    function toggleExport(inputId) {
+        var inputElement = document.getElementById(inputId);
+        inputElement.value = inputElement.value === "true" ? "false" : "true";
+        document.getElementById('exportForm').submit();
+    }
+</script>
+

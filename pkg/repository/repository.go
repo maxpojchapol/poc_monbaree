@@ -36,4 +36,5 @@ type DatabaseRepo interface {
 	QueryDiscount() (bool, []models.Product)
 	QueryTotalRedeem(string) (int, int)
 	QueryTotalSpend(string) int
+	QueryOrderByUser(string) (bool, []models.Order)
 }

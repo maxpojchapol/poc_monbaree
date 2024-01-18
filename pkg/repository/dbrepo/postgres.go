@@ -869,6 +869,80 @@ func (m *postgresDBRepo) QueryOrderById(orderid string) (bool, []models.Order) {
 	// fmt.Println(listProductModel)
 	return true, listOrderModel
 }
+func (m *postgresDBRepo) QueryOrderByUser(Userid string) (bool, []models.Order) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	query := `
+		SELECT
+			od.order_id,
+			od.status,
+			od.total_price,
+			od.user_order,
+			od.address,
+			od.shipping_id,
+			od.shipping_cost,
+			od.product_cost,
+			od.weight,
+			od.phone,
+			od.name,
+			od.date,
+			od.created_at,
+			od.updated_at,
+			us.lineuserid,
+			us.first_name,
+			us.last_name,
+			us.address,
+			us.phone
+		FROM "order" od
+		JOIN users us ON od.user_order = us.lineuserid 
+		WHERE us.lineuserid::TEXT LIKE $1
+	`
+	rows, err := m.DB.QueryContext(ctx, query, "%"+Userid+"%")
+
+	if err != nil {
+		// Proper error handling, e.g., log or return an error to indicate failure
+		fmt.Println(err)
+		return false, nil
+	}
+
+	defer rows.Close()
+	listOrderModel := []models.Order{}
+	for rows.Next() {
+		orderModel := models.Order{}
+		// fmt.Println(rows)
+		err := rows.Scan(
+			&orderModel.OrderId,
+			&orderModel.Status,
+			&orderModel.TotalPrice,
+			&orderModel.UserOrderId,
+			&orderModel.Address,
+			&orderModel.ShippingId,
+			&orderModel.ShippingCost,
+			&orderModel.ProductCost,
+			&orderModel.Weight,
+			&orderModel.Phone,
+			&orderModel.Name,
+			&orderModel.Date,
+			&orderModel.CreatedAt,
+			&orderModel.UpdatedAt,
+			&orderModel.UserOrder.Lineuserid,
+			&orderModel.UserOrder.FirstName,
+			&orderModel.UserOrder.LastName,
+			&orderModel.UserOrder.Address,
+			&orderModel.UserOrder.Phone)
+		if err != nil {
+			// Proper error handling, e.g., log or return an error to indicate failure
+			fmt.Println(err)
+			return false, nil
+		}
+		orderModel.DateString = orderModel.Date.Format("02-01-2006")
+
+		listOrderModel = append(listOrderModel, orderModel)
+
+	}
+	// fmt.Println(listProductModel)
+	return true, listOrderModel
+}
 
 func (m *postgresDBRepo) QueryDiscount() (bool, []models.Product) {
 	var rows *sql.Rows
