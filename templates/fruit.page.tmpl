@@ -41,9 +41,11 @@
 <div class="row text-center">
     <h1 style="font-family: 'Prompt'">รายการสินค้า</h1>
 </div>
+
 <!-- <div class="row">
     <h6 style="font-family: 'Prompt';margin-left:6px">ประกาศ: สำหรับการสั่งของออนไลน์ Monbarree จะหยุดการจัดส่งตั้งแต่วันที่ 27 ธันวาคม 2023 ถึงวันที่ 2 มกราคม 2024</h6>
 </div> -->
+
 <div class="container mt-2">
     
         <form id="filterForm" action="/filter" method="get" >
@@ -92,7 +94,6 @@
 <!-- Modal -->
 
     {{range $index, $productData := .ProductData}}
-
     <div class="modal fade" id="exampleModal-{{$index}}" tabindex="-1" aria-labelledby="#exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog"  id="#modal-{{$index}}">
             <div class="modal-content">
@@ -140,7 +141,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
                     <!-- <button type="submit" class="btn btn-primary addToCart">Buy now</button> -->
-                    <button class="btn btn-pinkd addToCart" id="addtocart-{{.Product.Id}}"  data-bs-dismiss="modal" 
+                    <button class="btn btn-pinkd addToCart" id="addtocart-{{.Product.Id}}"  data-bs-dismiss="modal"
                             onclick="addToCart('{{.Product.Id}}','{{.Product.ProductName}}','{{.Product.ProductDescription}}')">เพิ่มใส่ตะกร้า</button>
                 </div>
                     <!-- </form> -->
@@ -154,7 +155,7 @@
     <div class="shopping-cart fixed" style="position: fixed; right: 40px; top: 600px ; background-color: #DE3163; border-radius: 0.5rem;padding: 0;margin: 0;" id="cartdata">
         <button data-bs-toggle="modal" data-bs-target="#cartModal" class="custom-button">
             <p style="color: black;padding: 0;margin: 0; font-family: Prompt;">ตะกร้า<p>
-            <img src="../static/image/cart.png" width="40px" height="40px" alt="Custom Cart Image" style="padding: 0;margin: 0;">
+            <img src="../static/image/cart.png" width="50px" height="45px" alt="Custom Cart Image" style="padding: 0;margin: 0;">
         </button>
     </div>
 
@@ -197,6 +198,36 @@
                         <button  class="btn btn-pinkd" data-bs-dismiss="modal" id="button-next" type="submit" >ถัดไป</button>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="registerModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+    
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">ท่านยังไม่ได้ทำการลงทะเบียน</h4>
+                    <button type="button" class="btn btn-pinkd"  aria-label="Close" onclick="closeRegisterModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+    
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <p>ท่านยังไม่ได้ทำการลงทะเบียน</p>
+                </div>
+    
+                <!-- Modal Footer -->
+
+                <div class="modal-footer">
+                    <form id="filterForm" action="/register" method="get" >
+                        <button type="submit" class="btn btn-secondary" >ลงทะเบียน</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="registerModal" onclick="closeRegisterModal()">ปิด</button>
+                </div>
+    
             </div>
         </div>
     </div>
@@ -282,6 +313,15 @@
         console.log("my cart data is " + cart)
         function addToCart(productId, productName,productDescription) {
             // Update your cart or perform other actions
+            if ("{{.User.FirstName}}"){
+
+            }
+            else{
+                console.log("test")
+                var modal = document.getElementById('registerModal');
+                modal.style.display = (modal.style.display === 'none' || modal.style.display === '') ? 'block' : 'none';
+                return
+            }
             var optionPrice = document.querySelectorAll('input[name="fruit_option_' + productId + '"]:checked')[0].getAttribute('data-option_price');
             var optionWeight = document.querySelectorAll('input[name="fruit_option_' + productId + '"]:checked')[0].getAttribute('data-option-weight');
             var optionName = document.querySelectorAll('input[name="fruit_option_' + productId + '"]:checked')[0].getAttribute('data-fruit_option');
@@ -426,6 +466,12 @@
         document.addEventListener('DOMContentLoaded', function() {
         checkAndChangeButtonColor();
         });
+
+        function closeRegisterModal() {
+            console.log("Test")
+            var modal = document.getElementById('registerModal');
+            modal.style.display = 'none'
+        }
 
 </script>
 
