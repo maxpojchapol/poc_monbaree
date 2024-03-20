@@ -302,7 +302,7 @@ func (m *Repository) PostOrder(w http.ResponseWriter, r *http.Request) {
 	//update user amount
 	product_cost := listcartItem[len(listcartItem)-1].Total
 	total_weight := listcartItem[len(listcartItem)-1].TotalWeight
-	shipping_data := m.ManageShippingPrice(total_weight)
+	shipping_data := m.ManageShippingPrice(total_weight, product_cost)
 	total_spend := product_cost + shipping_data.Total_cost
 	amount_data := util.ManageAmountRemain(total_spend, user.AmountRemain)
 	fmt.Println(amount_data["next_money_remain"])
@@ -403,7 +403,7 @@ func (m *Repository) Summary(w http.ResponseWriter, r *http.Request) {
 	}
 	m.App.Session.Put(r.Context(), "Cart-data", cart_data)
 	//Calculate the shipping price
-	shipping_data := m.ManageShippingPrice(total_weight)
+	shipping_data := m.ManageShippingPrice(total_weight, total)
 	data["procuct_total_price"] = total
 	data["total_price"] = total + shipping_data.Total_cost
 
@@ -465,7 +465,7 @@ func (m *Repository) Filter(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (m *Repository) ManageShippingPrice(total_weight int) models.ShippingCost {
+func (m *Repository) ManageShippingPrice(total_weight int, product_price int) models.ShippingCost {
 	box_list, _ := m.DB.QueryShippingBox()
 	total_ship_cost := 0
 	description := []string{}
@@ -510,6 +510,9 @@ func (m *Repository) ManageShippingPrice(total_weight int) models.ShippingCost {
 	}
 
 	// shipping_data:= models.ShippingCost{}
+	if product_price >= 1000 {
+		total_ship_cost = 0
+	}
 	shipping_data := models.ShippingCost{
 		Total_cost:  total_ship_cost,
 		Description: description,
