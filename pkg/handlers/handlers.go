@@ -367,10 +367,13 @@ func (m *Repository) Summary(w http.ResponseWriter, r *http.Request) {
 	data := make(map[string]interface{})
 
 	havediscount := 0
-	if total >= 2000 {
-		havediscount = -200
-	} else if 1000 <= total && total < 2000 {
-		havediscount = -100
+	// if total >= 2000 {
+	// 	havediscount = -200
+	// } else if 1000 <= total && total < 2000 {
+	// 	havediscount = -100
+	// }
+	if total >= 1000 {
+		havediscount = -170
 	}
 	if havediscount != 0 {
 		// query discount data
