@@ -69,14 +69,20 @@ func (m *Repository) Success(w http.ResponseWriter, r *http.Request) {
 		User: user,
 	})
 }
+
 func (m *Repository) Product(w http.ResponseWriter, r *http.Request) {
 	// _, _ = m.DB.QueryProduct()
+
+	user, err := m.App.Session.Get(r.Context(), "User").(models.User)
+	if err {
+		m.Liff(w, r)
+		user, _ = m.App.Session.Get(r.Context(), "User").(models.User)
+	}
+	fmt.Println(user)
 	_, list_product := m.DB.QueryProduct("", false)
 	_, list_product_option := m.DB.QueryProductOption(false)
 	product_productoption_map := util.Product_product_option_map(list_product, list_product_option)
 
-	user, _ := m.App.Session.Get(r.Context(), "User").(models.User)
-	fmt.Println(user)
 	data := make(map[string]interface{})
 	data["Filter"] = "All"
 	render.RenderTemplate(w, r, "fruit.page.tmpl", &models.TemplateData{
@@ -215,6 +221,7 @@ func (m *Repository) PostRegister(w http.ResponseWriter, r *http.Request) {
 		m.PostCode(w, r)
 	} else {
 		http.Redirect(w, r, "/product", http.StatusSeeOther)
+		// http.Redirect(w, r, "/product", http.StatusSeeOther)
 	}
 
 }
@@ -360,10 +367,13 @@ func (m *Repository) Summary(w http.ResponseWriter, r *http.Request) {
 	data := make(map[string]interface{})
 
 	havediscount := 0
-	if total >= 2000 {
-		havediscount = -200
-	} else if 1000 <= total && total < 2000 {
-		havediscount = -100
+	// if total >= 2000 {
+	// 	havediscount = -200
+	// } else if 1000 <= total && total < 2000 {
+	// 	havediscount = -100
+	// }
+	if total >= 1000 {
+		havediscount = -170
 	}
 	if havediscount != 0 {
 		// query discount data
@@ -430,6 +440,7 @@ func (m *Repository) RequireLogin(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
 func (m *Repository) RequireAdmin(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user, ok := m.App.Session.Get(r.Context(), "User").(models.User)
@@ -510,9 +521,9 @@ func (m *Repository) ManageShippingPrice(total_weight int, product_price int) mo
 	}
 
 	// shipping_data:= models.ShippingCost{}
-	if product_price >= 1000 {
-		total_ship_cost = 0
-	}
+	// if product_price >= 1000 {
+	// 	total_ship_cost = 0
+	// }
 	shipping_data := models.ShippingCost{
 		Total_cost:  total_ship_cost,
 		Description: description,

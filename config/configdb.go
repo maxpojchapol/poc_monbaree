@@ -35,7 +35,7 @@ func main() {
 	fmt.Println("Starting config db")
 
 	// Define your PostgreSQL connection configuration
-	connConfig := "user=max dbname=monbaree password=maxxx456"
+	connConfig := "host=localhost user=max dbname=monbaree password=maxxx456"
 
 	// Establish a database connection
 	conn, err := pgx.Connect(context.Background(), connConfig)

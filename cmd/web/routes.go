@@ -27,8 +27,8 @@ func routes(app *config.AppConfig) http.Handler {
 		r.Get("/filter_order", handlers.Repo.FilterOrder)
 		r.Post("/set_gift_date", handlers.Repo.SetGiftDate)
 		r.Post("/postline", handlers.Repo.NotifyMessage)
-		// r.Get("/product", handlers.Repo.Product)
 		r.Get("/filter", handlers.Repo.Filter)
+
 		//for checking admin
 		mux.Group(func(admin chi.Router) {
 			admin.Use(handlers.Repo.RequireAdmin)
@@ -47,6 +47,7 @@ func routes(app *config.AppConfig) http.Handler {
 
 		// Other authenticated routes
 	})
+
 	mux.Get("/product", handlers.Repo.Product)
 	mux.Get("/home", handlers.Repo.Home)
 	mux.Get("/ourstory", handlers.Repo.Ourfarm)
@@ -55,7 +56,6 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Post("/register", handlers.Repo.PostRegister)
 	mux.Get("/", handlers.Repo.Liff)
 	mux.Post("/checkuser", handlers.Repo.CheckUser)
-
 	// mux.Get("/", handlers.Repo.Home)
 
 	fileServer := http.FileServer(http.Dir("../../static"))
