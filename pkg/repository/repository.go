@@ -21,6 +21,7 @@ type DatabaseRepo interface {
 	QueryOrder(time.Time, time.Time, string) (bool, []models.Order)
 	QueryOrderDetail() (bool, []models.OrderDetail)
 	QueryUserDetail() (bool, []models.User)
+	QueryAllUserDetail() (bool, []models.Userjson)
 	UpdateOrderStatus(string, string) (bool, error)
 	UpdateOrderShipping(string, string) (bool, error)
 	UpdateOrderDate(time.Time, string) (bool, error)

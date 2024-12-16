@@ -414,6 +414,7 @@ func (m *Repository) Summary(w http.ResponseWriter, r *http.Request) {
 	m.App.Session.Put(r.Context(), "Cart-data", cart_data)
 	//Calculate the shipping price
 	shipping_data := m.ManageShippingPrice(total_weight, total)
+	fmt.Println(shipping_data)
 	data["procuct_total_price"] = total
 	data["total_price"] = total + shipping_data.Total_cost
 
@@ -510,6 +511,7 @@ func (m *Repository) ManageShippingPrice(total_weight int, product_price int) mo
 			total_weight -= box.MaxCapacity * 1000 * box_quan
 			description = append(description, fmt.Sprintf("%s จำนวน %d กล่อง", box.OptionName, int(box_quan)))
 		}
+
 		lastboxprice = box.BoxPrice
 		lastboxcap = box.MaxCapacity
 		lastboxquan = box_quan

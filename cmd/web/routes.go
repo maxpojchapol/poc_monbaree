@@ -35,6 +35,7 @@ func routes(app *config.AppConfig) http.Handler {
 			admin.Get("/admin", handlers.Repo.Admin)
 			admin.Get("/getorder", handlers.Repo.GetOrderTable)
 			admin.Get("/user_data", handlers.Repo.GetUserTable)
+			admin.Get("/add_pinto_code", handlers.Repo.AddPintoCodeForAdmin)
 			admin.Get("/add_product", handlers.Repo.AddProduct)
 			admin.Post("/add_product", handlers.Repo.AddProduct)
 			admin.Get("/manage_product", handlers.Repo.ManageProduct)
@@ -43,6 +44,7 @@ func routes(app *config.AppConfig) http.Handler {
 			admin.HandleFunc("/download", handlers.Repo.ServeFile)
 			admin.HandleFunc("/backup", handlers.Repo.BackupFile)
 			admin.Get("/user/{id}", handlers.Repo.GetUserProfile)
+			admin.Post("/postcode_admin", handlers.Repo.Postcode_admin)
 		})
 
 		// Other authenticated routes

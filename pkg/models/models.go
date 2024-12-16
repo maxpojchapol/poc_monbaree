@@ -148,3 +148,18 @@ type DataChange struct {
 	ChangeFeild string `json:"change_field"`
 	ChangeData  string `json:"change_data"`
 }
+
+type Userjson struct {
+	Lineuserid   string `json:"lineuserid"`
+	FirstName    string `json:"first_name"`
+	LastName     string `json:"last_name"`
+	HouseNo      string `json:"house_no"`
+	Soi          string `json:"soi"`
+	Road         string `json:"road"`
+	SubDistrict  string `json:"sub_district"`
+	County       string `json:"county"`
+	Country      string `json:"country"`
+	PostCode     string `json:"post_code"`
+	Phone        string `json:"phone"`
+	AmountRemain int    `json:"amount_remain"`
+}

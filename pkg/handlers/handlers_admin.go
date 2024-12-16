@@ -72,6 +72,67 @@ func (m *Repository) Admin(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, r, "admin.page.tmpl", &models.TemplateData{})
 }
 
+func (m *Repository) AddPintoCodeForAdmin(w http.ResponseWriter, r *http.Request) {
+	var lineUserDetails []map[string]interface{}
+
+	// m.App.Session.Put(r.Context(), "User", user)
+	user, _ := m.App.Session.Get(r.Context(), "User").(models.User)
+	tmplineuseradmin := user.Lineuserid
+	_, userdetails := m.DB.QueryAllUserDetail()
+	// fmt.Println(userdetails[0].Lineuserid)
+
+	for _, userdetail := range userdetails {
+		var lineUserDetail map[string]interface{}
+		url := fmt.Sprintf("https://api.line.me/v2/bot/profile/%s", userdetail.Lineuserid)
+
+		// Create a GET request
+		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			http.Error(w, "Error creating request", http.StatusInternalServerError)
+			return
+		}
+
+		// Add authorization header
+		req.Header.Set("Authorization", "Bearer "+os.Getenv("LineAccessToken"))
+
+		// Make the request
+		client := &http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			http.Error(w, "Error making request", http.StatusInternalServerError)
+			return
+		}
+		defer resp.Body.Close() // Close response body at the correct place
+
+		// Check if request succeeded
+		if resp.StatusCode != http.StatusOK {
+			http.Error(w, "Failed to get LINE user data", resp.StatusCode)
+			return
+		}
+
+		// Decode the response
+		err = json.NewDecoder(resp.Body).Decode(&lineUserDetail)
+		if err != nil {
+			http.Error(w, "Error parsing response", http.StatusInternalServerError)
+			return
+		}
+
+		// Log and append details
+		fmt.Printf("LINE User Details: %+v\n", lineUserDetail)
+		fmt.Println("//////////////////////")
+		lineUserDetails = append(lineUserDetails, lineUserDetail)
+	}
+	fmt.Println("LINE User Details:", lineUserDetails)
+	fmt.Println(tmplineuseradmin)
+	fmt.Println(userdetails)
+	userDetailsJSON, _ := json.Marshal(userdetails)
+	render.RenderTemplate(w, r, "addpintocode.page.tmpl", &models.TemplateData{
+		User:            user,
+		LineUserDetails: lineUserDetails,
+		Userjson:        string(userDetailsJSON),
+	})
+}
+
 func (m *Repository) UpdateOrderData(w http.ResponseWriter, r *http.Request) {
 	formdata := r.Form.Get("form-data")
 	option := r.URL.Query().Get("filter_option")
@@ -383,4 +444,96 @@ func (m *Repository) GetUserProfile(w http.ResponseWriter, r *http.Request) {
 		OrderData: order_orderDetail_map,
 	})
 	//Query total order
+}
+
+func (m *Repository) Postcode_admin(w http.ResponseWriter, r *http.Request) {
+	data := make(map[string]interface{})
+	code := r.Form.Get("promocode")
+	fmt.Println((code))
+	tmpuser := models.User{
+		Lineuserid:  r.FormValue("lineuserid"), // Replace or modify this if it comes from another context
+		FirstName:   r.FormValue("first_name"),
+		LastName:    r.FormValue("last_name"),
+		HouseNo:     r.FormValue("house_no"),
+		Soi:         r.FormValue("soi"),
+		Road:        r.FormValue("road"),
+		SubDistrict: r.FormValue("sub_district"),
+		County:      r.FormValue("county"),
+		Country:     r.FormValue("country"),
+		PostCode:    r.FormValue("post_code"),
+		Phone:       r.FormValue("phone"),
+		Address: "บ้านเลขที่ " + r.FormValue("house_no") +
+			"ซอย " + r.Form.Get("soi") +
+			"ถนน " + r.Form.Get("road") +
+			"แขวง " + r.Form.Get("sub_district") +
+			"เขต " + r.Form.Get("county") +
+			"จังหวัด " + r.Form.Get("country") +
+			r.Form.Get("post_code"),
+		JoinAt: time.Now(), // Set the current time
+		Admin:  false,      // Default value; update as needed
+	}
+	fmt.Println(tmpuser)
+	m.App.Session.Put(r.Context(), "User", tmpuser)
+	user, _ := m.App.Session.Get(r.Context(), "User").(models.User)
+	ok, promo_code := m.DB.QueryPromoCode(code)
+
+	if !ok {
+		data := make(map[string]interface{})
+		data["error"] = true
+		render.RenderTemplate(w, r, "addpintocode.page.tmpl", &models.TemplateData{
+			User: user,
+			Data: data,
+		})
+		return
+	}
+	var monthlist map[int]interface{}
+	ok, pinto_code := m.DB.QueryPinto(promo_code.Pinto)
+	if ok {
+		data["Pinto_Redeem"] = pinto_code.Duration
+		data["Ispinto"] = true
+		fmt.Printf("This code has Pinto duration for %d months", pinto_code.Duration)
+		m.App.Session.Put(r.Context(), "pinto", pinto_code)
+		monthlist = util.Createmonthlist(pinto_code.Duration)
+		intMapJSON, _ := json.Marshal(monthlist)
+		data["IntMapJSON"] = string(intMapJSON)
+	}
+	fmt.Println("Amount in promocode is", promo_code.Amount)
+
+	//add the amount of cash to user
+	user.AmountRemain += promo_code.Amount
+	// _, user = m.DB.CheckHaveUser(user.Lineuserid)
+	fmt.Println("Amount in user is update to ", user.AmountRemain)
+	fmt.Println("Update balance in DB")
+
+	_, err := m.DB.UpdateUserAmount(user.AmountRemain, user.Lineuserid)
+	if err != nil {
+		fmt.Println("Cannot update DB")
+	}
+	fmt.Println("Update balance in DB successful")
+
+	m.App.Session.Put(r.Context(), "User", user)
+
+	//add data to display
+	fmt.Println("Add Credit_redeem to interface")
+	data["Credit_Redeem"] = promo_code.Amount
+	if promo_code.Amount != 0 {
+		data["Iscredit"] = true
+	}
+	fmt.Println("Add Code success")
+	ok, _ = m.DB.MarkPromoCode(code, user)
+	fmt.Println(monthlist)
+	if !ok {
+		data := make(map[string]interface{})
+		data["error"] = true
+		render.RenderTemplate(w, r, "addcode.page.tmpl", &models.TemplateData{
+			User: user,
+			Data: data,
+		})
+		return
+	}
+	render.RenderTemplate(w, r, "addcode_success.page.tmpl", &models.TemplateData{
+		User:   user,
+		Data:   data,
+		IntMap: monthlist,
+	})
 }

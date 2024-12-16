@@ -616,6 +616,63 @@ func (m *postgresDBRepo) QueryUserDetail() (bool, []models.User) {
 	// fmt.Println(listProductModel)
 	return true, listUserDetailModel
 }
+func (m *postgresDBRepo) QueryAllUserDetail() (bool, []models.Userjson) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	query := `
+	SELECT
+		lineuserid,
+		first_name,
+		last_name,
+		phone,
+		house_no,
+		county,
+		post_code,
+		sub_district,
+		country,
+		soi,
+		road,
+		amount_remain
+	FROM "users"
+`
+	rows, err := m.DB.QueryContext(ctx, query)
+	if err != nil {
+		// Proper error handling, e.g., log or return an error to indicate failure
+		fmt.Println(err)
+		return false, nil
+	}
+
+	defer rows.Close()
+	listUserDetailModel := []models.Userjson{}
+	for rows.Next() {
+		userDetailModel := models.Userjson{}
+		// fmt.Println(rows)
+		err := rows.Scan(
+			&userDetailModel.Lineuserid,
+			&userDetailModel.FirstName,
+			&userDetailModel.LastName,
+			&userDetailModel.Phone,
+			&userDetailModel.HouseNo,
+			&userDetailModel.Country,
+			&userDetailModel.PostCode,
+			&userDetailModel.SubDistrict,
+			&userDetailModel.Country,
+			&userDetailModel.Soi,
+			&userDetailModel.Road,
+			&userDetailModel.AmountRemain,
+		)
+		if err != nil {
+			// Proper error handling, e.g., log or return an error to indicate failure
+			fmt.Println(err)
+			return false, nil
+		}
+
+		listUserDetailModel = append(listUserDetailModel, userDetailModel)
+
+	}
+	// fmt.Println(listProductModel)
+	return true, listUserDetailModel
+}
 
 func (m *postgresDBRepo) UpdateOrderStatus(status string, orderId string) (bool, error) {
 	query := `UPDATE "order" SET status=$1 WHERE order_id = $2`
