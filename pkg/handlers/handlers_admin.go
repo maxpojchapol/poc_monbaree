@@ -106,7 +106,7 @@ func (m *Repository) AddPintoCodeForAdmin(w http.ResponseWriter, r *http.Request
 
 		// Check if request succeeded
 		if resp.StatusCode != http.StatusOK {
-			http.Error(w, "Failed to get LINE user data", resp.StatusCode)
+			// http.Error(w, "Failed to get LINE user data", resp.StatusCode)
 		} else {
 			// Decode the response
 			err = json.NewDecoder(resp.Body).Decode(&lineUserDetail)
