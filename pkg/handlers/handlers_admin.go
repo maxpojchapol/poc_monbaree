@@ -108,19 +108,20 @@ func (m *Repository) AddPintoCodeForAdmin(w http.ResponseWriter, r *http.Request
 		if resp.StatusCode != http.StatusOK {
 			http.Error(w, "Failed to get LINE user data", resp.StatusCode)
 			return
+		} else {
+			// Decode the response
+			err = json.NewDecoder(resp.Body).Decode(&lineUserDetail)
+			if err != nil {
+				http.Error(w, "Error parsing response", http.StatusInternalServerError)
+				return
+			}
+
+			// Log and append details
+			fmt.Printf("LINE User Details: %+v\n", lineUserDetail)
+			fmt.Println("//////////////////////")
+			lineUserDetails = append(lineUserDetails, lineUserDetail)
 		}
 
-		// Decode the response
-		err = json.NewDecoder(resp.Body).Decode(&lineUserDetail)
-		if err != nil {
-			http.Error(w, "Error parsing response", http.StatusInternalServerError)
-			return
-		}
-
-		// Log and append details
-		fmt.Printf("LINE User Details: %+v\n", lineUserDetail)
-		fmt.Println("//////////////////////")
-		lineUserDetails = append(lineUserDetails, lineUserDetail)
 	}
 	fmt.Println("LINE User Details:", lineUserDetails)
 	fmt.Println(tmplineuseradmin)
