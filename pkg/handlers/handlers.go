@@ -414,6 +414,9 @@ func (m *Repository) Summary(w http.ResponseWriter, r *http.Request) {
 	m.App.Session.Put(r.Context(), "Cart-data", cart_data)
 	//Calculate the shipping price
 	shipping_data := m.ManageShippingPrice(total_weight, total)
+	if total >= 1500 {
+		shipping_data.Total_cost = 0
+	}
 	fmt.Println(shipping_data)
 	data["procuct_total_price"] = total
 	data["total_price"] = total + shipping_data.Total_cost
