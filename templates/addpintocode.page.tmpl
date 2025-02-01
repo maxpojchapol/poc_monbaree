@@ -1,0 +1,230 @@
+{{template "base" .}}
+
+<style>
+    .custom-dropdown {
+        position: relative;
+        display: inline-block;
+        width: 300px;
+    }
+
+    .custom-input {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .custom-options {
+        position: absolute;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #ccc;
+        display: none;
+        z-index: 1000;
+    }
+
+    .custom-options div {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .custom-options div:hover {
+        background: #f0f0f0;
+    }
+</style>
+
+{{define "content"}}
+<div class="container">
+    <!-- <div class="row">
+        <div class="col">
+            <h1 class="mt-3">เพิ่ม Code</h1>
+            <form action="/postcode" method="post">
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                <div class="form-group mb-3">
+                    <label for="promocode">กรุณาใส่ Code ที่ท่านได้รับ</label>
+                    {{with .Data.error}}
+                    <label class="text-danger">โค้ดไม่ถูกต้อง</label>
+                    {{end}}
+                    <input type="text" class="form-control" id="promocode" name="promocode" placeholder="กรุณาใส่ Code ที่ท่านได้รับ">
+                </div>
+                <button type="submit" class="btn btn-primary">ยืนยัน</button>
+            </form>
+        </div>
+    </div> -->
+    {{with .Data.error}}
+    <label class="text-danger">โค้ดไม่ถูกต้อง</label>
+    {{end}}
+    <h2>เลือกชื่อใน Line</h2>
+
+    <div class="custom-dropdown">
+        <input type="text" id="searchInput" class="custom-input" placeholder="Type to search..." autocomplete="off" oninput="filterOptions()">
+        <div id="dropdownOptions" class="custom-options">
+            {{range .LineUserDetails}}
+            <div onclick="selectOption('{{.displayName}}','{{.userId}}')">{{.displayName}}</div>
+            {{end}}
+        </div>
+    </div>
+
+    <div id="userDetails" style="margin-top: 20px;">
+        {{range .LineUserDetails}}
+        <div id="{{.displayName}}" class="user-detail" style="display: none;">
+            <h3>User Details</h3>
+            <p><strong>Name:</strong> {{.displayName}}</p>
+            <p><strong>Picture:</strong></p>
+            <img src="{{.pictureUrl}}" alt="Profile Picture" width="150" height="150">
+        </div>
+        {{end}}
+    </div>
+<br><br>
+    <div id="user-form" class="userdata-detail" style="display: none;">
+        <h2>ใส่ข้อมูลของลูกค้า</h2>
+        <form action="/postcode_admin" method="post"
+        >
+        <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+            <div class="form-group mb-3">
+                <label for="promocode">กรุณาใส่ Code ที่ท่านได้รับ</label>
+
+                <input type="text" class="form-control" id="promocode" name="promocode" placeholder="กรุณาใส่ Code ที่ท่านได้รับ">
+            </div>
+            <input type="hidden" id="lineuserid" name="lineuserid">
+            <div class="form-group mb-3">
+                <label for="first_name">ชื่อ:</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="first_name">
+            </div>
+            <div class="form-group mb-3">
+                <label for="last_name">นามสกุล:</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name">
+            </div>
+            <div class="form-group mb-3">
+                <label for="house_no">บ้านเลขที่</label>
+                <input type="text" class="form-control" id="house_no" name="house_no" placeholder="House No">
+            </div>
+            <div class="form-group mb-3">
+                <label for="soi">ซอย</label>
+                <input type="text" class="form-control" id="soi" name="soi" placeholder="soi No">
+            </div>
+            <div class="form-group mb-3">
+                <label for="road">ถนน</label>
+                <input type="text" class="form-control" id="road" name="road" placeholder="road">
+            </div>
+            <div class="form-group mb-3">
+                <label for="sub_district">แขวง/ตำบล</label>
+                <input type="text" class="form-control" id="sub_district" name="sub_district" placeholder="sub_district No">
+            </div>
+            <div class="form-group mb-3">
+                <label for="county">เขต</label>
+                <input type="text" class="form-control" id="county" name="county" placeholder="county No">
+            </div>
+            <div class="form-group mb-3">
+                <label for="country">จังหวัด</label>
+                <input type="text" class="form-control" id="country" name="country" placeholder="country No">
+            </div>
+            <div class="form-group mb-3">
+                <label for="post_code">รหัสไปรษณีย์</label>
+                <input type="text" class="form-control" id="post_code" name="post_code" placeholder="post_code">
+            </div>
+            <div class="form-group mb-3">
+                <label for="phone">เบอร์โทรศัพท์</label>
+                <input type="text" class="form-control" id="phone" name="phone" placeholder="phone No">
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+
+
+{{end}}
+
+
+{{define "js"}}
+<script>
+
+const searchInput = document.getElementById("searchInput");
+const dropdownOptions = document.getElementById("dropdownOptions");
+
+var userdataform = document.getElementById("user-form");
+// Show dropdown when input is focused
+searchInput.addEventListener("focus", () => {
+    dropdownOptions.style.display = "block";
+});
+
+// Hide dropdown when clicking outside
+document.addEventListener("click", (e) => {
+    if (!document.querySelector(".custom-dropdown").contains(e.target)) {
+        dropdownOptions.style.display = "none";
+    }
+});
+
+function filterOptions() {
+    const filter = searchInput.value.toLowerCase().trim();
+    const options = dropdownOptions.querySelectorAll("div");
+
+    let hasResults = false;
+
+    options.forEach((option) => {
+        const text = option.textContent.toLowerCase();
+        if (text.includes(filter)) {
+            option.style.display = "block";
+            hasResults = true;
+        } else {
+            option.style.display = "none";
+        }
+    });
+
+    dropdownOptions.style.display = hasResults ? "block" : "none";
+}
+
+function selectOption(displayName,userId) {
+    searchInput.value = displayName;
+    dropdownOptions.style.display = "none";
+    showDetails(displayName,userId);
+}
+
+function showDetails(displayName,userId) {
+    // Hide all user details first
+    const userData = JSON.parse('{{.Userjson}}');  // Safely parse JSON
+    const user = userData.find(u => u.lineuserid === userId);
+   
+    
+    if (user) {
+        console.log(user); // Debugging: Check in browser console
+        var userdataform = document.getElementById("user-form");
+
+        // Populate the form inputs
+        // document.getElementById("lineuserid").value = user.lineuserid || "";
+        document.getElementById("lineuserid").value = user.lineuserid || "";
+        document.getElementById("first_name").value = user.first_name || "";
+        document.getElementById("last_name").value = user.last_name || "";
+        document.getElementById("house_no").value = user.house_no || "";
+        document.getElementById("soi").value = user.soi || "";
+        document.getElementById("road").value = user.road || "";
+        document.getElementById("sub_district").value = user.sub_district || "";
+        document.getElementById("county").value = user.county || "";
+        document.getElementById("country").value = user.country || "";
+        document.getElementById("post_code").value = user.post_code || "";
+        document.getElementById("phone").value = user.phone || "";
+        userdataform.style.display="block";
+
+    }
+    else{
+        console.log("No user found")
+        userdataform.style.display="none";
+    }
+
+    document.querySelectorAll('.user-detail').forEach(detail => {
+        detail.style.display = "none";
+    });
+
+    // Show selected user's details
+    const selectedDetail = document.getElementById(displayName);
+    if (selectedDetail) {
+        selectedDetail.style.display = "block";
+    }
+}
+</script>
+{{end}}
